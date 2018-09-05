@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:padding="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_tanggal"
+        android:text="Tanggal"
+        />
+
+    <TextView
+        android:padding="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_pasien"
+        android:layout_below="@id/label_tanggal"
+        android:text="Nama pasien"
+        />
+
+
+    <TextView
+        android:padding="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_mr"
+        android:layout_below="@id/label_tanggal"
+        android:layout_toRightOf="@id/label_pasien"
+        android:text="No. Rekam Medis"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+
+        />
+    <TextView
+        android:layout_margin="3dp"
+        android:padding="5dp"
+        android:background="@color/year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_diagnosa"
+        android:layout_below="@id/label_pasien"
+        android:text="DIAGNOSA"
+
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:padding="5dp"
+        android:inputType="text"
+        android:id="@+id/et_diagnosa"
+        android:layout_below="@id/label_diagnosa"/>
+
+    <TextView
+        android:layout_margin="3dp"
+        android:padding="5dp"
+        android:background="@color/year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_tindakan"
+        android:layout_below="@id/et_diagnosa"
+        android:text="TINDAKAN"
+
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:padding="5dp"
+        android:inputType="text"
+        android:id="@+id/et_tindakan"
+        android:layout_below="@id/label_tindakan"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_simpan"
+        android:text="SIMPAN DATA"
+        android:layout_below="@id/et_tindakan"
+        android:gravity="bottom"
+        />
+</RelativeLayout>

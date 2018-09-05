@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">DigitalHomeCare</string>
+    <string-array name="role">
+        <item>Admin</item>
+        <item>Pasien</item>
+        <item>Klinik</item>
+        <item>Perawat</item>
+        <item>Dokter</item>
+    </string-array>
+
+    <string-array name="klinik">
+        <item>RS. Al Islam Bandung</item>
+        <item>Klinik Ananda</item>
+        <item>Homecare Salman</item>
+    </string-array>
+
+    <string-array name="layanan">
+        <item>Kolaborasi dengan tim medis</item>
+        <item>Kolaborasi dengan tim terapis</item>
+        <item>Laboratorium</item>
+        <item>Pemantauan CVA</item>
+        <item>EKG, Cek Lab, Periksa Refleks</item>
+        <item>Pendidikan Kesehatan Tentang CVA</item>
+        <item>Suction</item>
+        <item>Penanganan Nyeri</item>
+        <item>Pemantauan Tekanan Darah</item>
+        <item>Konsultasi Via Telepon</item>
+        <item>Konsultasi Langsung</item>
+        <item>Terapi Wicara</item>
+        <item>Latihan ROM</item>
+    </string-array>
+
+    <string-array name="layananharga">
+        <item>300000</item>
+        <item>100000</item>
+        <item>130000</item>
+        <item>560000</item>
+        <item>120000</item>
+        <item>320000</item>
+        <item>300000</item>
+        <item>340000</item>
+        <item>320000</item>
+        <item>100000</item>
+        <item>300000</item>
+        <item>300000</item>
+        <item>300000</item>
+    </string-array>
+</resources>
