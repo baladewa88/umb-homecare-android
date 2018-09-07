@@ -66,13 +66,15 @@ public class OrderMedis extends AppCompatActivity {
     }
 
     private void prepareMovieData() {
-        TransaksiUtil movie = new TransaksiUtil("Sutadi Triputra", "009865", "18 Agustus 2018");
+
+        String[] a = new String[1];
+        TransaksiUtil movie = new TransaksiUtil("Sutadi Triputra", "009865", "18 Agustus 2018", "Sutadi Triputra", "009865", "","18 Agustus 2018", a);
         movieList.add(movie);
 
-        movie = new TransaksiUtil("Sutadi", "86875", "21 Agustus 2018");
+        movie = new TransaksiUtil("Sutadi Triputra", "009865", "18 Agustus 2018", "Sutadi Triputra", "009865", "","18 Agustus 2018", a);
         movieList.add(movie);
 
-        movie = new TransaksiUtil("Triputra", "23454", "21 Agustus 2018");
+        movie = new TransaksiUtil("Sutadi Triputra", "009865", "18 Agustus 2018", "Sutadi Triputra", "009865", "","18 Agustus 2018", a);
         movieList.add(movie);
 
         mAdapter.notifyDataSetChanged();

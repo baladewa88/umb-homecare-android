@@ -117,28 +117,36 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                                     userData.getString("gender"),
                                     userData.getString("roles"),
                                     userData.getString("dateBirth"),
-                                    json_obj.getString("token"));
+                                    json_obj.getString("token"),
+                                    json_obj.getString("id"));
 
                 if(userData.getString("roles").equals("[\"ROLE_PATIENT\"]")){
+                    Log.e("ROLES","PASIEN");
 
                     Intent iPasien = new Intent(Login.this, DashboardMain.class);
                     startActivity(iPasien);
 
                 }else if(userData.getString("roles").equals("[\"ROLE_ADMIN\"]")){
+                    Log.e("ROLES","ADMIN");
                     Intent iAdmin = new Intent(Login.this, DashboardUtama.class);
                     startActivity(iAdmin);
 
                 }else if(userData.getString("roles").equals("[\"ROLE_NURSE\"]")){
+                    Log.e("ROLES","NURSE");
                     Intent iMedis = new Intent(Login.this, DashboardMedis.class);
                     startActivity(iMedis);
 
                 }else if(userData.getString("roles").equals("[\"ROLE_DOCTOR\"]")){
+                    Log.e("ROLES","DOCTOR");
                     Intent iMedis = new Intent(Login.this, DashboardMedis.class);
                     startActivity(iMedis);
 
                 }else if(userData.getString("roles").equals("[\"ROLE_CLINIC\"]")){
+                    Log.e("ROLES","CLINIC");
                     Intent iKlinik = new Intent(Login.this, DashboardKlinik.class);
                     startActivity(iKlinik);
+                }else {
+                    Log.e("ROLES","NONE");
                 }
 
 

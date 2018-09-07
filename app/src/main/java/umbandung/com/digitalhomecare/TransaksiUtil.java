@@ -1,37 +1,76 @@
 package umbandung.com.digitalhomecare;
 
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Arkhan on 8/23/2018.
  */
 
 public class TransaksiUtil {
+    private String idPasien, tipeTransaksi, statusTransaksi, statusPembayaran, idKlinik, alamat, tanggal;
+    private String[] layanan;
 
-    private String nama, rm, tanggal;
+    public TransaksiUtil(String idPasien, String tipeTransaksi, String statusTransaksi,String statusPembayaran,String idKlinik,String alamat,String tanggal, String[] layanan){
 
-    public TransaksiUtil(String nama, String rm, String tanggal){
-        this.nama = nama;
-        this.rm = rm;
+        this.idPasien = idPasien;
+        this.tipeTransaksi = tipeTransaksi;
+        this.statusTransaksi = statusTransaksi;
+        this.statusPembayaran = statusPembayaran;
+        this.idKlinik = idKlinik;
+        this.alamat = alamat;
         this.tanggal = tanggal;
+        this.layanan = layanan;
+
     }
 
-    public String getNama() {
-        return nama;
+    public String getIdPasien() {
+        return idPasien;
     }
 
-    public void setNama(String nama) {
-        this.nama = nama;
+    public void setIdPasien(String idPasien) {
+        this.idPasien = idPasien;
     }
 
-    public String getRm() {
-        return rm;
+    public String getTipeTransaksi() {
+        return tipeTransaksi;
     }
 
-    public void setRm(String rm) {
-        this.rm = rm;
+    public void setTipeTransaksi(String tipeTransaksi) {
+        this.tipeTransaksi = tipeTransaksi;
+    }
+
+    public String getStatusTransaksi() {
+        return statusTransaksi;
+    }
+
+    public void setStatusTransaksi(String statusTransaksi) {
+        this.statusTransaksi = statusTransaksi;
+    }
+
+    public String getStatusPembayaran() {
+        return statusPembayaran;
+    }
+
+    public void setStatusPembayaran(String statusPembayaran) {
+        this.statusPembayaran = statusPembayaran;
+    }
+
+    public String getIdKlinik() {
+        return idKlinik;
+    }
+
+    public void setIdKlinik(String idKlinik) {
+        this.idKlinik = idKlinik;
+    }
+
+    public String getAlamat() {
+        return alamat;
+    }
+
+    public void setAlamat(String alamat) {
+        this.alamat = alamat;
     }
 
     public String getTanggal() {
@@ -40,5 +79,30 @@ public class TransaksiUtil {
 
     public void setTanggal(String tanggal) {
         this.tanggal = tanggal;
+    }
+
+    public String[] getLayanan() {
+        return layanan;
+    }
+
+    public void setLayanan(String[] layanan) {
+        this.layanan = layanan;
+    }
+
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("userPatient", idPasien);
+            obj.put("transactionTypeId", tipeTransaksi);
+            obj.put("transactionStatusId", statusTransaksi);
+            obj.put("paymentFixedPriceStatusId", statusPembayaran);
+            obj.put("idClinic", idKlinik);
+            obj.put("addressToVisit", alamat);
+            obj.put("date", tanggal);
+            obj.put("serviceList", layanan);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 }

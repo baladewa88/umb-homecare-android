@@ -9,10 +9,11 @@ import org.json.JSONObject;
 
 public class OrderLayananUtil {
 
-    private String nama, kode, harga;
+    private String id, nama, kode, harga;
 
-    public OrderLayananUtil(String nama, String kode, String harga){
+    public OrderLayananUtil(String id, String nama, String kode, String harga){
 
+        this.id = id;
         this.nama = nama;
         this.kode = kode;
         this.harga = harga;
@@ -43,9 +44,19 @@ public class OrderLayananUtil {
         this.harga = harga;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public JSONObject getJSONObject() {
         JSONObject obj = new JSONObject();
         try {
+            obj.put("id", id);
+
             obj.put("nama", nama);
             obj.put("kode", kode);
             obj.put("harga", harga);

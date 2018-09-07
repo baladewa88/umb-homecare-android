@@ -11,7 +11,7 @@ import android.content.SharedPreferences.Editor;
 public class MySharedPrefernce {
 
     public static final String PREFS_NAME = "AOP_PREFS";
-    public static final String PREFS_KEY = "AOP_PREFS_String";
+    public static final String PREFS_KEY = "token";
     public static final String KEY_NAMA = "nama";
     public static final String KEY_ALAMAT = "alamat";
     public static final String KEY_EMAIL = "email";
@@ -19,12 +19,13 @@ public class MySharedPrefernce {
     public static final String KEY_SEX = "sex";
     public static final String KEY_ROLE = "role";
     public static final String KEY_DOB = "dob";
+    public static final String KEY_ID = "id";
 
     public MySharedPrefernce() {
         super();
     }
 
-    public void save(Context context, String nama, String alamat, String email,String phone, String sex, String role, String dob, String token) {
+    public void save(Context context, String nama, String alamat, String email,String phone, String sex, String role, String dob, String token, String id) {
         SharedPreferences settings;
         Editor editor;
 
@@ -40,6 +41,7 @@ public class MySharedPrefernce {
         editor.putString(KEY_ROLE, role); //3
         editor.putString(KEY_DOB, dob); //3
         editor.putString(PREFS_KEY, token); //3
+        editor.putString(KEY_ID, id); //3
 
         editor.commit(); //4
     }
@@ -58,6 +60,7 @@ public class MySharedPrefernce {
         text[5] = settings.getString(KEY_ROLE, null);
         text[6] = settings.getString(KEY_DOB, null);
         text[7] = settings.getString(PREFS_KEY, null);
+        text[8] = settings.getString(KEY_ID, null);
 
         return text;
     }

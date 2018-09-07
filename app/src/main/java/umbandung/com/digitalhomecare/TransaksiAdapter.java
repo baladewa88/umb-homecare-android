@@ -43,8 +43,8 @@ public class TransaksiAdapter extends RecyclerView.Adapter<TransaksiAdapter.MyVi
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         TransaksiUtil movie = moviesList.get(position);
-        holder.title.setText(movie.getNama());
-        holder.genre.setText(movie.getRm());
+        holder.title.setText(movie.getIdPasien());
+        holder.genre.setText(movie.getTipeTransaksi());
         holder.year.setText(movie.getTanggal());
     }
 
