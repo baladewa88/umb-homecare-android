@@ -44,6 +44,9 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
     public static final int CONNECTION_TIMEOUT = 100000;
     public static final int READ_TIMEOUT = 150000;
 
+
+    JSONObject json_obj, userData;
+
     //Hubungan sama volley
     private RequestQueue mRequestQueue;
     private StringRequest mStringRequest;
@@ -92,6 +95,7 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
         final String urlLogin = "http://167.205.7.227:9028/authenticate/"+roleParam ;
         //RequestQueue initialized
         mRequestQueue = Volley.newRequestQueue(this);
+
         StringRequest postRequest = new StringRequest(Request.Method.POST, urlLogin,
                 new Response.Listener<String>()
                 {
@@ -101,13 +105,44 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                         // response
 //                        Log.e("Response", response);
                         try {
-                            JSONObject json_obj = new JSONObject(response);
-                            JSONObject userData = new JSONObject(json_obj.getString("user"));
+                            json_obj = new JSONObject(response);
+                            userData = new JSONObject(json_obj.getString("user"));
                             Log.e("TOKEN",json_obj.getString("token"));
                             Log.e("dateBirth",userData.getString("dateBirth"));
                             Log.e("nama",userData.getString("fullName"));
                             Log.e("roles atas",userData.getString("roles"));
-                            Log.e("roles array",userData.getString("roles"));
+                            Log.e("roles array",userData.getString("id"));
+
+
+
+                            if(userData.getString("roles").equals("[\"ROLE_PATIENT\"]")){
+                                Log.e("ROLES","PASIEN");
+
+                                Intent iPasien = new Intent(Login.this, DashboardMain.class);
+                                startActivity(iPasien);
+
+                            }else if(userData.getString("roles").equals("[\"ROLE_ADMIN\"]")){
+                                Log.e("ROLES","ADMIN");
+                                Intent iAdmin = new Intent(Login.this, DashboardUtama.class);
+                                startActivity(iAdmin);
+
+                            }else if(userData.getString("roles").equals("[\"ROLE_NURSE\"]")){
+                                Log.e("ROLES","NURSE");
+                                Intent iMedis = new Intent(Login.this, DashboardMedis.class);
+                                startActivity(iMedis);
+
+                            }else if(userData.getString("roles").equals("[\"ROLE_DOCTOR\"]")){
+                                Log.e("ROLES","DOCTOR");
+                                Intent iMedis = new Intent(Login.this, DashboardMedis.class);
+                                startActivity(iMedis);
+
+                            }else if(userData.getString("roles").equals("[\"ROLE_CLINIC\"]")){
+                                Log.e("ROLES","CLINIC");
+                                Intent iKlinik = new Intent(Login.this, DashboardKlinik.class);
+                                startActivity(iKlinik);
+                            }else {
+                                Log.e("ROLES","NONE");
+                            }
 
                             mySharedPrefernce.save(Login.this,
                                     userData.getString("fullName"),
@@ -118,43 +153,15 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                                     userData.getString("roles"),
                                     userData.getString("dateBirth"),
                                     json_obj.getString("token"),
-                                    json_obj.getString("id"));
+                                    userData.getString("id"));
 
-                if(userData.getString("roles").equals("[\"ROLE_PATIENT\"]")){
-                    Log.e("ROLES","PASIEN");
-
-                    Intent iPasien = new Intent(Login.this, DashboardMain.class);
-                    startActivity(iPasien);
-
-                }else if(userData.getString("roles").equals("[\"ROLE_ADMIN\"]")){
-                    Log.e("ROLES","ADMIN");
-                    Intent iAdmin = new Intent(Login.this, DashboardUtama.class);
-                    startActivity(iAdmin);
-
-                }else if(userData.getString("roles").equals("[\"ROLE_NURSE\"]")){
-                    Log.e("ROLES","NURSE");
-                    Intent iMedis = new Intent(Login.this, DashboardMedis.class);
-                    startActivity(iMedis);
-
-                }else if(userData.getString("roles").equals("[\"ROLE_DOCTOR\"]")){
-                    Log.e("ROLES","DOCTOR");
-                    Intent iMedis = new Intent(Login.this, DashboardMedis.class);
-                    startActivity(iMedis);
-
-                }else if(userData.getString("roles").equals("[\"ROLE_CLINIC\"]")){
-                    Log.e("ROLES","CLINIC");
-                    Intent iKlinik = new Intent(Login.this, DashboardKlinik.class);
-                    startActivity(iKlinik);
-                }else {
-                    Log.e("ROLES","NONE");
-                }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+
+
+
+                    }
                 },
                 new Response.ErrorListener()
                 {

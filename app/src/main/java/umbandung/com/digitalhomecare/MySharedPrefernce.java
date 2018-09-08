@@ -48,7 +48,7 @@ public class MySharedPrefernce {
 
     public String[] getValue(Context context) {
         SharedPreferences settings;
-        String[] text = new String[8];
+        String[] text = new String[9];
 
         //settings = PreferenceManager.getDefaultSharedPreferences(context);
         settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

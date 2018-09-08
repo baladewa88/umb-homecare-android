@@ -8,13 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Username"
-        android:id="@+id/etUsername"/>
+        android:id="@+id/etUsername"
+        android:inputType="textEmailAddress"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
-        android:id="@+id/etPassword"/>
+        android:id="@+id/etPassword"
+        android:inputType="textPassword"/>
 
     <Spinner
         android:id="@+id/spinner_role"

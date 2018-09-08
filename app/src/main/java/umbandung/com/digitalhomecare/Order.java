@@ -25,7 +25,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -46,8 +45,16 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import umbandung.com.digitalhomecare.Model.GetOrder;
+import umbandung.com.digitalhomecare.Model.PostPutDelOrder;
+import umbandung.com.digitalhomecare.Rest.ApiClient;
+import umbandung.com.digitalhomecare.Rest.ApiInterface;
 
 /**
  * Created by Arkhan on 8/23/2018.
@@ -79,6 +86,9 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
     ArrayList<KlinikUtil> dataKlinik;
     Spinner spLayanan;
 
+    //hubungan sama retrofit
+    public ApiInterface mApiInterface;
+
     public V2DatabaseHandler db;
 
     JSONArray riArray = new JSONArray();
@@ -96,10 +106,15 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
         dataDevice = new ArrayList<LayananUtil>();
         dataKlinik = new ArrayList<KlinikUtil>();
 
+        mApiInterface = ApiClient.getClient().create(ApiInterface.class);
+
         token = datas[7];
         Log.e("TOKEN ORDER",token);
         sendAndRequestResponse();
+        getKlinik();
         Log.e("Isi data device", ""+dataDevice.size());
+//        Log.e("Isi data klinik", ""+dataDevice.size());
+
 
 
 //        Toast.makeText(getApplicationContext(),"Masuk ke order", Toast.LENGTH_SHORT).show();
@@ -225,6 +240,31 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
+                final String jsonText = "{" +
+                        "\"userPatient\" : {" +
+                        "\"id\" : 6 // id patient" +
+                        "}," +
+                        "\"transactionTypeId\" :{" +
+                        "\"id\" : 2  // type of transaction 1 for homecare and 2 for  laboratory" +
+                        "}," +
+                        "\"transactionStatusId\" : {" +
+                        "\"id\" : 2 // On Process = 2, On Validation = 1, Failed = 3, Cancelled = 4, 5 = Expire, 6 = Finish" +
+                        "}," +
+                        "\"paymentFixedPriceStatusId\":{" +
+                        "\"id\" : 2 // Unpaid = 2, Paid = 1" +
+                        "}," +
+                        "\"idClinic\" : {" +
+                        "\"id\" : 1 // id Clinic, clinic that selected by patient." +
+                        "}," +
+                        "\"serviceList\" : [{" +
+                        "\"id\" : 1t// id of services that selected by patient can be more than 0ne" +
+                        "},{" +
+                        "\"id\" : 2// id of services that selected by patient can be more than 0ne" +
+                        "}" +
+                        "]," +
+                        "\"addressToVisit\" : \"Jalan Kangkung 21 Bogor\"" +
+                        "\"date\" : "+System.currentTimeMillis()+" // date visit to home , this timestamp format in millisecond" +
+                        "}";
 //                db = new V2DatabaseHandler(Order.this);
 //                db.addData(new V2SaveUtil(getDateTime(),
 //                        "Sutadi Triputra",
@@ -235,13 +275,29 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 //                Toast.makeText(getApplicationContext(), "Data Disimpan", Toast.LENGTH_LONG).show();
 
                 //Masukkan semua layanan yg dipilih ke dalam object json
-                for(int y =0; y<arrayLayanan.size(); y++){
-                    riArray.put(arrayLayanan.get(y).getJSONObject());
-//					Toast.makeText(RasioItem.this, riArray.toString(), Toast.LENGTH_LONG).show();
-                }
+//                for(int y =0; y<arrayLayanan.size(); y++){
+//                    riArray.put(arrayLayanan.get(y).getJSONObject());
+////					Toast.makeText(RasioItem.this, riArray.toString(), Toast.LENGTH_LONG).show();
+//                }
+
+                Call<PostPutDelOrder> postOrderCall = mApiInterface.postOrder("6","1");
+                postOrderCall.enqueue(new Callback<PostPutDelOrder>() {
+                    @Override
+                    public void onResponse(Call<PostPutDelOrder> call, retrofit2.Response<PostPutDelOrder> response) {
+                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostPutDelOrder> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Penambahan Order Gagal => "+t.getMessage().toString(), Toast.LENGTH_LONG).show();
+
+                    }
+                });
+                
                             }
         });
     }
+
 
     private void postReq(){
         final String urlOrder = "http://167.205.7.227:9028/api/transaction" ;
@@ -253,34 +309,6 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 //        paymentFixedPriceStatusId.id=2;
 //        idClinic.id = 1;
 //        serviceList[]= {id=1};
-        final String jsonText = "{" +
-                "\"userPatient\" : {" +
-                "\"id\" : 13 // id patient" +
-                "}," +
-                "\"transactionTypeId\" :{" +
-                "\"id\" : 1  // type of transaction 1 for homecare and 2 for  laboratory" +
-                "}," +
-                "\"transactionStatusId\" : {" +
-                "\"id\" : 2 // On Process = 2, On Validation = 1, Failed = 3, Cancelled = 4, 5 = Expire, 6 = Finish" +
-                "}," +
-                "\"paymentFixedPriceStatusId\":{" +
-                "\"id\" : 2 // Unpaid = 2, Paid = 1" +
-                "}," +
-                "\"idClinic\" : {" +
-                "\"id\" : 1 // id Clinic, clinic that selected by patient." +
-                "}," +
-                "\"serviceList\" : [{" +
-                "\"id\" : 1t// id of services that selected by patient can be more than 0ne" +
-                "},{" +
-                "\"id\" : 2// id of services that selected by patient can be more than 0ne" +
-                "}" +
-                "]," +
-                "\"addressToVisit\" : \"Jalan Kangkung 21 Bogor\"" +
-                "\"date\" : "+System.currentTimeMillis()+" // date visit to home , this timestamp format in millisecond" +
-                "}";
-
-
-
 
         //RequestQueue initialized
         mRequestQueue = Volley.newRequestQueue(this);
@@ -308,7 +336,7 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
             protected Map<String, String> getParams()
             {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("bodyjson", jsonText);
+                params.put("bodyjson", "");
 
                 return params;
             }
@@ -360,9 +388,6 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
                         data.setName(koordinat.getString("nameOfservices"));
                         data.setCode(koordinat.getString("codeOfservices"));
                         data.setPrice(koordinat.getString("price"));
-
-                        Log.e("Json Array Response",i+":"+koordinat.getString("long")+" - "+koordinat.getString("lat"));
-
                         dataDevice.add(data);
                     }
                 } catch (JSONException e) {
@@ -397,27 +422,35 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 
         Log.e("Klinik Request", token);
 
-        JsonObjectRequest req = new JsonObjectRequest(urlKlinik, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // handle response
-                    }
-                }, new Response.ErrorListener() {
+        StringRequest request = new StringRequest(Request.Method.POST, urlKlinik, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!response.equals(null)) {
+                    Log.e("Your Array Response", response);
+                } else {
+                    Log.e("Your Array Response", "Data Null");
+                }
+            }
+
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // handle error
+                Log.e("error is ", "" + error);
             }
-        })
-        {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", token);
-                return headers;
-            }
-        };
+        }) {
 
-        mRequestQueue.add(req);
+            //This is for Headers If You Needed
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json; charset=UTF-8");
+                params.put("token", token);
+                return params;
+            }
+
+
+        };
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        queue.add(request);
     }
 }
