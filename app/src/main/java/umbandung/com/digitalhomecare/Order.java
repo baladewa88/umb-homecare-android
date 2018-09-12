@@ -51,6 +51,8 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import umbandung.com.digitalhomecare.Adapter.AdapterKlinik;
+import umbandung.com.digitalhomecare.Adapter.AdapterSpinnerLayanan;
 import umbandung.com.digitalhomecare.Model.GetOrder;
 import umbandung.com.digitalhomecare.Model.PostPutDelOrder;
 import umbandung.com.digitalhomecare.Rest.ApiClient;
@@ -110,8 +112,10 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 
         token = datas[7];
         Log.e("TOKEN ORDER",token);
-        sendAndRequestResponse();
-        getKlinik();
+//        sendAndRequestResponse();
+//        getKlinik();
+        getSecret();
+        getKlinikRetro();
         Log.e("Isi data device", ""+dataDevice.size());
 //        Log.e("Isi data klinik", ""+dataDevice.size());
 
@@ -176,8 +180,7 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 //        jenisLayanan.setAdapter(adapterGolBtp);
 
         spLayanan = (Spinner)findViewById(R.id.spLayanan);
-        ArrayAdapter<LayananUtil> adapterLayanan = new ArrayAdapter<LayananUtil>(this, android.R.layout.simple_spinner_dropdown_item, dataDevice);
-        spLayanan.setAdapter(adapterLayanan);
+
 
 //        spLayanan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
@@ -196,13 +199,9 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 //
 //            }
 //        });
-        jenisLayanan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"oncliklistener Clicked", Toast.LENGTH_LONG).show();
 
-            }
-        });
+        getSecret();    //Get List Layanan
+        getKlinikRetro(); // Get List Klinik
 
 
         btnRasioItem = (Button) findViewById(R.id.btnTambahJenisBtp);
@@ -280,24 +279,133 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 ////					Toast.makeText(RasioItem.this, riArray.toString(), Toast.LENGTH_LONG).show();
 //                }
 
-                Call<PostPutDelOrder> postOrderCall = mApiInterface.postOrder("6","1");
-                postOrderCall.enqueue(new Callback<PostPutDelOrder>() {
-                    @Override
-                    public void onResponse(Call<PostPutDelOrder> call, retrofit2.Response<PostPutDelOrder> response) {
-                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
-                    }
 
-                    @Override
-                    public void onFailure(Call<PostPutDelOrder> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "Penambahan Order Gagal => "+t.getMessage().toString(), Toast.LENGTH_LONG).show();
-
-                    }
-                });
+               postOrderRequest();
                 
                             }
         });
     }
 
+    private void postOrderRequest(){
+
+        umbandung.com.digitalhomecare.Model.Order orderData = new umbandung.com.digitalhomecare.Model.Order();
+        Call<PostPutDelOrder> responseOrder = mApiInterface.postOrder(orderData);
+
+        responseOrder.enqueue(new Callback<PostPutDelOrder>() {
+            @Override
+            public void onResponse(Call<PostPutDelOrder> call, retrofit2.Response<PostPutDelOrder> response) {
+
+                Toast.makeText(getApplicationContext(), "Sukses => "+response.body().getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onFailure(Call<PostPutDelOrder> call, Throwable t) {
+
+                Toast.makeText(getApplicationContext(), "error order", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+
+    }
+
+    private void getSecret(){
+
+        Call<List<LayananUtil>> layanan = mApiInterface.getSecret(token);
+        layanan.enqueue(new Callback<List<LayananUtil>>() {
+            @Override
+            public void onResponse(Call<List<LayananUtil>> call, retrofit2.Response<List<LayananUtil>> response) {
+
+                List<LayananUtil> tempLayanan = response.body();
+
+//                try {
+////                    JSONObject json_obj = new JSONObject(response.toString());
+////                    Log.e("JSON RESPONSE",""+json_obj);
+////                    JSONArray jsonResponse  = json_obj.
+//                    Log.e("List Layanan", response.toString())
+//                    JSONArray jsonResponse = new JSONArray(response);
+//
+//                    for (int i=0; i<jsonResponse.length(); i++){
+//                        JSONObject koordinat = jsonResponse.getJSONObject(i);
+//                        LayananUtil data = new LayananUtil();
+//                        data.setId(koordinat.getString("id"));
+//                        data.setName(koordinat.getString("nameOfservices"));
+//                        data.setCode(koordinat.getString("codeOfservices"));
+//                        data.setPrice(koordinat.getString("price"));
+//                        dataDevice.add(data);
+//                    }
+//                } catch (JSONException e) {
+//                    Log.e("ERROR JSON", e.toString());
+//                    e.printStackTrace();
+//                }
+//
+//                ArrayAdapter<LayananUtil> adapterLayanan = new ArrayAdapter<LayananUtil>(Order.this,
+//                        android.R.layout.simple_spinner_dropdown_item, tempLayanan);
+
+                for(int y =0; y<tempLayanan.size(); y++){
+                    Log.e("TEMP LAYANAN Nama", tempLayanan.get(y).getName());
+                    Log.e("TEMP LAYANAN Harga", tempLayanan.get(y).getPrice());
+
+                }
+                AdapterSpinnerLayanan al = new AdapterSpinnerLayanan(Order.this, R.layout.row_spinnerlayanan, tempLayanan);
+
+                spLayanan.setAdapter(al);
+            }
+
+            @Override
+            public void onFailure(Call<List<LayananUtil>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "error get layanan -> "+t.getMessage().toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void getKlinikRetro(){
+
+        Call<List<KlinikUtil>> klinik = mApiInterface.getKlinik(token);
+        klinik.enqueue(new Callback<List<KlinikUtil>>() {
+            @Override
+            public void onResponse(Call<List<KlinikUtil>> call, retrofit2.Response<List<KlinikUtil>> response) {
+
+                List<KlinikUtil> tempKlinik = response.body();
+
+
+//                try {
+//                    JSONObject json_obj = new JSONObject(response.toString());
+//                    Log.e("JSON RESPONSE",""+json_obj);
+//                    JSONArray jsonResponse  = json_obj.
+//                    JSONArray jsonResponse = new JSONArray(response);
+//
+//                    for (int i=0; i<jsonResponse.length(); i++){
+//                        JSONObject koordinat = jsonResponse.getJSONObject(i);
+//                        KlinikUtil data = new KlinikUtil();
+//                        data.setId(koordinat.getString("id"));
+//                        data.setNama(koordinat.getString("nameOfClinic"));
+//                        data.setKode(koordinat.getString("codeOfClinic"));
+//                        data.setAlamat(koordinat.getString("address"));
+//                        data.setStatus(koordinat.getString("status"));
+//                        dataKlinik.add(data);
+//                    }
+//                } catch (JSONException e) {
+//                    Log.e("ERROR JSON", e.toString());
+//                    e.printStackTrace();
+//                }
+
+//                ArrayAdapter<KlinikUtil> adapterKlinik = new ArrayAdapter<KlinikUtil>(Order.this,
+//                        android.R.layout.simple_spinner_dropdown_item, tempKlinik);
+
+                AdapterKlinik aklinik = new AdapterKlinik(Order.this, R.layout.row_spinnerklinik, tempKlinik);
+                spLayanan.setAdapter(aklinik);
+            }
+
+            @Override
+            public void onFailure(Call<List<KlinikUtil>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "error get klinik => "+t.getMessage().toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
 
     private void postReq(){
         final String urlOrder = "http://167.205.7.227:9028/api/transaction" ;
@@ -375,25 +483,7 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 
                 Toast.makeText(getApplicationContext(),"Response :" + response.toString(), Toast.LENGTH_LONG).show();//display the response on screen
 
-                try {
-                    JSONObject json_obj = new JSONObject(response);
-                    Log.e("JSON RESPONSE",""+json_obj);
-//                    JSONArray jsonResponse  = json_obj.
-                    JSONArray jsonResponse = new JSONArray(response);
 
-                    for (int i=0; i<jsonResponse.length(); i++){
-                        JSONObject koordinat = jsonResponse.getJSONObject(i);
-                        LayananUtil data = new LayananUtil();
-                        data.setId(koordinat.getString("id"));
-                        data.setName(koordinat.getString("nameOfservices"));
-                        data.setCode(koordinat.getString("codeOfservices"));
-                        data.setPrice(koordinat.getString("price"));
-                        dataDevice.add(data);
-                    }
-                } catch (JSONException e) {
-                    Log.e("ERROR JSON", e.toString());
-                    e.printStackTrace();
-                }
 
 
             }

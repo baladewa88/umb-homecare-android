@@ -45,11 +45,12 @@ public class DashboardKlinik extends AppCompatActivity{
     // references to our images
     private int[] mThumbIds = {
             R.mipmap.homecare_profil,
-            R.mipmap.homecare_transaksi
+            R.mipmap.homecare_transaksi,
+            R.mipmap.logout
     };
 
     String[] gridViewString = {
 
-            "PETUGAS MEDIS", "TRANSAKSI"
+            "PETUGAS MEDIS", "TRANSAKSI", "LOG OUT",
     };
 }
