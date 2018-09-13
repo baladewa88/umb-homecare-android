@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,8 +25,10 @@
         <activity android:name=".DashboardAdmin" />
         <activity android:name=".DashboardMedis" />
         <activity android:name=".DashboardMain" />
-        <activity android:name=".OrderMedis"/>
-        <activity android:name=".Profil"/>
+        <activity android:name=".OrderMedis" />
+        <activity android:name=".Profil" />
+        <activity android:name=".DetailTransaksi" />
+        <activity android:name=".FormAssign"></activity>
     </application>
 
 </manifest>

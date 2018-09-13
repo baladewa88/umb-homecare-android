@@ -29,7 +29,7 @@ public class DashboardUtama extends AppCompatActivity {
         setContentView(R.layout.dashboard_utama);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

@@ -1,31 +1,47 @@
 package umbandung.com.digitalhomecare;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import umbandung.com.digitalhomecare.Model.*;
+import umbandung.com.digitalhomecare.Model.Transaksi;
 
 /**
  * Created by Arkhan on 8/23/2018.
  */
 
 public class OrderMedis extends AppCompatActivity {
-    private List<TransaksiUtil> movieList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private V2SaveRecyclerAdapter mAdapter;
+    private TransaksiRecyclerView mAdapter;
+    private ProgressDialog progressDialog;
+    private MySharedPrefernce mySharedPrefernce;
+    private Gson gson;
 
-    V2DatabaseHandler db;
-    ArrayList<V2SaveUtil> contacts;
+    private List<String> orderNumbers = new ArrayList<>();
+    private List<String> statuss = new ArrayList<>();
+    private List<String> dateOrders = new ArrayList<>();
+    private List<String> patientsName = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,49 +50,80 @@ public class OrderMedis extends AppCompatActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-        db = new V2DatabaseHandler(this);
-
-        contacts = db.getAllContacts();
-
-        Log.e("Contact", contacts.get(0).getNama());
+        mySharedPrefernce = new MySharedPrefernce();
+        gson = new GsonBuilder().create();
+        progressDialog = new ProgressDialog(this);
         recyclerView = (RecyclerView) findViewById(R.id.list_order_pasien);
-
-        mAdapter = new V2SaveRecyclerAdapter(contacts, OrderMedis.this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(
-                getApplicationContext(), recyclerView,
-                new RecyclerTouchListener.ClickListener() {
+        String[] mySharedPrefernceValue = mySharedPrefernce.getValue(this);
 
-                    @Override
-                    public void onClick(View view, int position) {
-                        Intent iMedis = new Intent(OrderMedis.this, OrderPasien.class);
-                        startActivity(iMedis);
-                    }
+        getListTransaction(mySharedPrefernceValue[7]);
 
-                    @Override
-                    public void onLongClick(View view, final int position) {
-
-                    }
-
-                }));
 
     }
 
-    private void prepareMovieData() {
+    private void getListTransaction(final String accesstoken) {
+        Log.d("accesstoken: ", accesstoken);
+        progressDialog.setMessage("Mohon Tunggu");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+        progressDialog.show();
 
-        String[] a = new String[1];
-        TransaksiUtil movie = new TransaksiUtil("Sutadi Triputra", "009865", "18 Agustus 2018", "Sutadi Triputra", "009865", "","18 Agustus 2018", a);
-        movieList.add(movie);
+        try {
+            final String clinicID = "1";
+            final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByIdClinic?page=0&size=10&sort=ASC&sortField=id&clinicId=";
+            RequestQueue mRequestQueue = Volley.newRequestQueue(this);
 
-        movie = new TransaksiUtil("Sutadi Triputra", "009865", "18 Agustus 2018", "Sutadi Triputra", "009865", "","18 Agustus 2018", a);
-        movieList.add(movie);
+            StringRequest request = new StringRequest(Request.Method.GET, endpoint + clinicID, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        orderNumbers.clear();
+                        dateOrders.clear();
+                        patientsName.clear();
+                        statuss.clear();
+                        Log.d("response: ",response);
+                        Transaksi transaksi = gson.fromJson(new JSONObject(response).toString(),Transaksi.class);
+                        if(transaksi.getContent().size() > 0){
+                            for(int i=0; i<transaksi.getContent().size();i++){
+                                Content content = transaksi.getContent().get(i);
+                                orderNumbers.add(content.getOrderNumber());
+                                dateOrders.add(content.getDateOrderIn());
+                                statuss.add(content.getTransactionStatusId().getStatus());
+                                patientsName.add(content.getUserPatient().getFullName());
+                            }
 
-        movie = new TransaksiUtil("Sutadi Triputra", "009865", "18 Agustus 2018", "Sutadi Triputra", "009865", "","18 Agustus 2018", a);
-        movieList.add(movie);
+                            mAdapter = new TransaksiRecyclerView(orderNumbers, dateOrders, patientsName, statuss);
+                            mAdapter.notifyDataSetChanged();
+                            recyclerView.setAdapter(mAdapter);
+                        }
+                        progressDialog.dismiss();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-        mAdapter.notifyDataSetChanged();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("error: ",error.toString());
+                    progressDialog.dismiss();
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders()
+                {
+                    HashMap<String, String>  params = new HashMap<String, String>();
+                    params.put("Authorization", accesstoken);
+
+                    return params;
+                }
+            };
+
+            mRequestQueue.add(request);
+        }catch (Error e){
+            e.printStackTrace();
+        }
     }
 }
