@@ -42,6 +42,8 @@ public class OrderMedis extends AppCompatActivity {
     private List<String> statuss = new ArrayList<>();
     private List<String> dateOrders = new ArrayList<>();
     private List<String> patientsName = new ArrayList<>();
+    private List<String> transactions = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,7 @@ public class OrderMedis extends AppCompatActivity {
                         dateOrders.clear();
                         patientsName.clear();
                         statuss.clear();
+                        transactions.clear();
                         Log.d("response: ",response);
                         Transaksi transaksi = gson.fromJson(new JSONObject(response).toString(),Transaksi.class);
                         if(transaksi.getContent().size() > 0){
@@ -94,9 +97,10 @@ public class OrderMedis extends AppCompatActivity {
                                 dateOrders.add(content.getDateOrderIn());
                                 statuss.add(content.getTransactionStatusId().getStatus());
                                 patientsName.add(content.getUserPatient().getFullName());
+                                transactions.add(String.valueOf(content.getId()));
                             }
 
-                            mAdapter = new TransaksiRecyclerView(orderNumbers, dateOrders, patientsName, statuss);
+                            mAdapter = new TransaksiRecyclerView(orderNumbers, dateOrders, patientsName, statuss, transactions);
                             mAdapter.notifyDataSetChanged();
                             recyclerView.setAdapter(mAdapter);
                         }

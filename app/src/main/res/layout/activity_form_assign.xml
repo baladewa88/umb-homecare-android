@@ -119,7 +119,7 @@
 
     <LinearLayout
         android:layout_marginTop="10dp"
-        android:id="@+id/ly_selected"
+        android:id="@+id/ly_nurse_assigned"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -129,12 +129,37 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Selected"
+            android:text="Nurse Selected"
             android:background="@color/colorAccent"/>
 
         <android.support.v7.widget.RecyclerView
             android:layout_marginTop="10dp"
-            android:id="@+id/list_selected"
+            android:id="@+id/list_nurse_assigned"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/ly_doctor_assigned"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Doctor Selected"
+            android:background="@color/colorAccent"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="10dp"
+            android:id="@+id/list_doctor_assigned"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />

@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -46,7 +47,6 @@ public class FormAssign extends AppCompatActivity {
             "Email",
             "SIPP"
     };
-
 
     private static HashMap<String, String> createNurseFieldMap()
     {
@@ -107,6 +107,8 @@ public class FormAssign extends AppCompatActivity {
     private List<String>  roles = new ArrayList<>();
     private EmployeeRecyclerView mAdapter;
     private RecyclerView recyclerView;
+    private LinearLayout lyNurseAssigned;
+    private LinearLayout lyDoctorAssigned;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +120,8 @@ public class FormAssign extends AppCompatActivity {
         etKeyword = (EditText) findViewById(R.id.et_keyword);
         radioGroup = (RadioGroup) findViewById(R.id.role_job);
         lyResult = (LinearLayout) findViewById(R.id.ly_result);
+        lyNurseAssigned = (LinearLayout) findViewById(R.id.ly_nurse_assigned);
+        lyDoctorAssigned = (LinearLayout) findViewById(R.id.ly_doctor_assigned);
 
         //inisiasi
         nurseFieldMap = createNurseFieldMap();
@@ -183,6 +187,109 @@ public class FormAssign extends AppCompatActivity {
                 }
             }
         });
+
+        getNurseAssignedList();
+        getDoctorAssignedList();
+    }
+
+    private void getNurseAssignedList() {
+        progressDialog.setMessage("Mohon Tunggu");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
+        final String accesstoken = mySharedPrefernce.getValueByKey(this, mySharedPrefernce.PREFS_KEY);
+        final String trxID = mySharedPrefernce.getValueByKey(this, "TRX_ID");
+
+        final String endpoint = "http://167.205.7.227:9028/api/transaction/getNurseList/"+trxID;
+        RequestQueue mRequestQueue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.GET, endpoint, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("nurse_assigned", response);
+                try {
+                    Employee employee = gson.fromJson(new JSONObject(response).toString(), Employee.class);
+                    if(employee.getContent().size() > 0){
+                        lyNurseAssigned.setVisibility(View.VISIBLE);
+//                        for(int i = 0; i<employee.getContent().size();i++){
+//                            Content content = employee.getContent().get(i);
+//
+//                        }
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", accesstoken);
+                return params;
+            }
+        };
+
+        mRequestQueue.add(request);
+
+
+    }
+
+    private void getDoctorAssignedList() {
+        progressDialog.setMessage("Mohon Tunggu");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
+        final String accesstoken = mySharedPrefernce.getValueByKey(this, mySharedPrefernce.PREFS_KEY);
+        final String trxID = mySharedPrefernce.getValueByKey(this, "TRX_ID");
+
+        final String endpoint = "http://167.205.7.227:9028/api/transaction/getDoctorList/"+trxID;
+        RequestQueue mRequestQueue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.GET, endpoint, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("doctor_assigned", response);
+                try {
+                    Employee employee = gson.fromJson(new JSONObject(response).toString(), Employee.class);
+                    if(employee.getContent().size() > 0){
+                        lyDoctorAssigned.setVisibility(View.VISIBLE);
+//                        for(int i = 0; i<employee.getContent().size();i++){
+//                            Content content = employee.getContent().get(i);
+//
+//                        }
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", accesstoken);
+                return params;
+            }
+        };
+
+        mRequestQueue.add(request);
+
+
     }
 
     private void doSearch() {
@@ -194,6 +301,7 @@ public class FormAssign extends AppCompatActivity {
         progressDialog.setProgress(0);
         progressDialog.show();
 
+        mySharedPrefernce.store(this, "SEARCH_TYPE", String.valueOf(searchType));
         String nurseParam = "nursesWithPaginationByFieldByIdClinic?";
         String doctorParam = "doctorsWithPaginationByFieldByIdClinic?";
         String param1 = searchType == 0 ? doctorParam : nurseParam;

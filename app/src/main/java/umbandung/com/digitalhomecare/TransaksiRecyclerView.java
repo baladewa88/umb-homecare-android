@@ -20,25 +20,28 @@ import java.util.Locale;
  */
 
 public class TransaksiRecyclerView extends RecyclerView.Adapter<TransaksiRecyclerView.ViewHolder> {
-    public static String[] orderNumber, dateOrder, patientsName, statuss;
-    private final MySharedPrefernce mySharedPrefernce;
+    public static String[] orderNumber, dateOrder, patientsName, statuss, transactionsID;
+    MySharedPrefernce mySharedPrefernce;
 
 
     public TransaksiRecyclerView(List<String> pOrderNumbers,
                                  List<String> pDateOrders,
                                  List<String> pPatientsName,
-                                 List<String> pStatuss) {
+                                 List<String> pStatuss,
+                                 List<String> pTransactionsID) {
 
         mySharedPrefernce = new MySharedPrefernce();
         orderNumber = new String[pOrderNumbers.size()];
         dateOrder = new String[pDateOrders.size()];
         patientsName = new String[pPatientsName.size()];
         statuss = new String[pStatuss.size()];
+        transactionsID = new String[pTransactionsID.size()];
 
         orderNumber = pOrderNumbers.toArray(orderNumber);
         dateOrder = pDateOrders.toArray(dateOrder);
         patientsName = pPatientsName.toArray(patientsName);
         statuss = pStatuss.toArray(statuss);
+        transactionsID = pTransactionsID.toArray(transactionsID);
     }
 
     @Override
@@ -60,6 +63,7 @@ public class TransaksiRecyclerView extends RecyclerView.Adapter<TransaksiRecycle
             @Override
             public void onClick(View v) {
                 mySharedPrefernce.store(v.getContext(), "ORDER_ID", orderNumber[position]);
+                mySharedPrefernce.store(v.getContext(), "TRX_ID", transactionsID[position]);
                 Intent intent = new Intent(v.getContext(), DetailTransaksi.class);
                 v.getContext().startActivity(intent);
             }
