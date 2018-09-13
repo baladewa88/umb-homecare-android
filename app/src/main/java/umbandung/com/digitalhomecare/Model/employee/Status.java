@@ -1,10 +1,10 @@
 
-package umbandung.com.digitalhomecare.Model;
+package umbandung.com.digitalhomecare.Model.employee;
 
 import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings("unused")
-public class TransactionStatusId {
+public class Status {
 
     @SerializedName("id")
     private Long mId;

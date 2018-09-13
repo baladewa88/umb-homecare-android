@@ -21,12 +21,15 @@ import java.util.Locale;
 
 public class TransaksiRecyclerView extends RecyclerView.Adapter<TransaksiRecyclerView.ViewHolder> {
     public static String[] orderNumber, dateOrder, patientsName, statuss;
+    private final MySharedPrefernce mySharedPrefernce;
+
 
     public TransaksiRecyclerView(List<String> pOrderNumbers,
                                  List<String> pDateOrders,
                                  List<String> pPatientsName,
                                  List<String> pStatuss) {
 
+        mySharedPrefernce = new MySharedPrefernce();
         orderNumber = new String[pOrderNumbers.size()];
         dateOrder = new String[pDateOrders.size()];
         patientsName = new String[pPatientsName.size()];
@@ -48,7 +51,7 @@ public class TransaksiRecyclerView extends RecyclerView.Adapter<TransaksiRecycle
     }
 
     @Override
-    public void onBindViewHolder(TransaksiRecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(TransaksiRecyclerView.ViewHolder holder, final int position) {
         holder.tvNomorOrder.setText(orderNumber[position]);
         holder.tvTanggalOrder.setText(dateFormatting(dateOrder[position]));
         holder.tvNamaPasien.setText(patientsName[position]);
@@ -56,6 +59,7 @@ public class TransaksiRecyclerView extends RecyclerView.Adapter<TransaksiRecycle
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mySharedPrefernce.store(v.getContext(), "ORDER_ID", orderNumber[position]);
                 Intent intent = new Intent(v.getContext(), DetailTransaksi.class);
                 v.getContext().startActivity(intent);
             }

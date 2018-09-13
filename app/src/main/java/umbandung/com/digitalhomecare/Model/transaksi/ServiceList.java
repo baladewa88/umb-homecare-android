@@ -1,5 +1,5 @@
 
-package umbandung.com.digitalhomecare.Model;
+package umbandung.com.digitalhomecare.Model.transaksi;
 
 import com.google.gson.annotations.SerializedName;
 

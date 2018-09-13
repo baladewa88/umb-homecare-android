@@ -1,10 +1,10 @@
 
-package umbandung.com.digitalhomecare.Model;
+package umbandung.com.digitalhomecare.Model.transaksi;
 
 import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings("unused")
-public class IdClinic {
+public class Clinic {
 
     @SerializedName("address")
     private String mAddress;
