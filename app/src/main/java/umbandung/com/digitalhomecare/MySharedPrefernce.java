@@ -20,6 +20,8 @@ public class MySharedPrefernce {
     public static final String KEY_ROLE = "role";
     public static final String KEY_DOB = "dob";
     public static final String KEY_ID = "id";
+    public static final String KEY_CLINIC_ID = "id";
+    public static final String KEY_TOKEN = "token";
 
     public MySharedPrefernce() {
         super();
@@ -87,4 +89,27 @@ public class MySharedPrefernce {
         editor.remove(PREFS_KEY);
         editor.commit();
     }
+
+    public void store(Context context, String key, String value){
+        SharedPreferences settings;
+        Editor editor;
+
+        settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        editor = settings.edit();
+
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    public String getValueByKey(Context context, String key) {
+        SharedPreferences settings;
+        String text = null;
+
+        //settings = PreferenceManager.getDefaultSharedPreferences(context);
+        settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        text = settings.getString(key, null);
+
+        return text;
+    }
+
 }
