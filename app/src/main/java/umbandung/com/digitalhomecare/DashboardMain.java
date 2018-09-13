@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -17,15 +18,20 @@ import android.widget.Toast;
 
 public class DashboardMain extends AppCompatActivity {
 
+    MySharedPrefernce mSettings;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard_main);
 
-        MySharedPrefernce mSettings = new MySharedPrefernce();
+        mSettings = new MySharedPrefernce();
         String[] datas = mSettings.getValue(DashboardMain.this);
         for(int i=0; i<datas.length; i++){
             Log.e("DATAS "+i+" => ",datas[i]);
         }
+
+        TextView nama = (TextView)findViewById(R.id.welcome_nama);
+        nama.setText("Selamat datang, "+datas[0]);
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
 
@@ -50,6 +56,10 @@ public class DashboardMain extends AppCompatActivity {
                 }else if(position==3){ //Halaman Transaksi
                     Intent iTransaksi = new Intent(DashboardMain.this, Transaksi.class);
                     startActivity(iTransaksi);
+                }else if(position==4){ //Halaman Transaksi
+                    mSettings.clearSharedPreference(DashboardMain.this);
+                    Intent iLogin = new Intent(DashboardMain.this, Login.class);
+                    startActivity(iLogin);
                 }
             }
         });
@@ -60,12 +70,13 @@ public class DashboardMain extends AppCompatActivity {
             R.mipmap.homecare_profil,
             R.mipmap.homecare_ecg,
             R.mipmap.homecare_order,
-            R.mipmap.homecare_transaksi
+            R.mipmap.homecare_transaksi,
+            R.mipmap.logout
     };
 
     String[] gridViewString = {
 
-            "PROFIL", "ECG", "ORDER", "HISTORY"
+            "PROFIL", "ECG", "ORDER", "HISTORY", "LOG OUT"
     };
 
 }

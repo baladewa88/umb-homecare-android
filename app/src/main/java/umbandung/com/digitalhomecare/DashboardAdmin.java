@@ -53,12 +53,13 @@ public class DashboardAdmin extends AppCompatActivity{
             R.mipmap.homecare_profil,
             R.mipmap.homecare_ecg,
             R.mipmap.homecare_order,
-            R.mipmap.homecare_transaksi
+            R.mipmap.homecare_transaksi,
+            R.mipmap.logout
     };
 
     String[] gridViewString = {
 
-            "PROFIL", "ECG", "ORDER", "HISTORY"
+            "PROFIL", "ECG", "ORDER", "HISTORY", "LOG OUT"
     };
 
 }

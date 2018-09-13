@@ -1,4 +1,4 @@
-package umbandung.com.digitalhomecare;
+package umbandung.com.digitalhomecare.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+
+import umbandung.com.digitalhomecare.LayananUtil;
+import umbandung.com.digitalhomecare.R;
 
 /**
  * Created by Arkhan on 7/25/2018.
