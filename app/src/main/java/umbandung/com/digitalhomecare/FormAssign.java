@@ -36,8 +36,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import umbandung.com.digitalhomecare.Model.doctor.Doctor;
 import umbandung.com.digitalhomecare.Model.employee.Content;
 import umbandung.com.digitalhomecare.Model.employee.Employee;
+import umbandung.com.digitalhomecare.Model.nurse.Nurse;
 
 public class FormAssign extends AppCompatActivity {
     String[] nurseFieldArray = new String[]{
@@ -106,9 +108,13 @@ public class FormAssign extends AppCompatActivity {
     private List<String>  clinicsNames = new ArrayList<>();
     private List<String>  roles = new ArrayList<>();
     private EmployeeRecyclerView mAdapter;
+    private EmployeeRecyclerView mAdapter1;
+    private EmployeeRecyclerView mAdapter2;
     private RecyclerView recyclerView;
     private LinearLayout lyNurseAssigned;
     private LinearLayout lyDoctorAssigned;
+    private RecyclerView nurseRecyclerView;
+    private RecyclerView doctorRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +138,12 @@ public class FormAssign extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.list_results);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
+
+        nurseRecyclerView = (RecyclerView) findViewById(R.id.list_nurse_assigned);
+        nurseRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        doctorRecyclerView = (RecyclerView) findViewById(R.id.list_doctor_assigned);
+        doctorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         final ArrayAdapter<String> adapter1 =new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, doctorFieldArray);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -189,7 +201,6 @@ public class FormAssign extends AppCompatActivity {
         });
 
         getNurseAssignedList();
-        getDoctorAssignedList();
     }
 
     private void getNurseAssignedList() {
@@ -209,24 +220,58 @@ public class FormAssign extends AppCompatActivity {
                 progressDialog.dismiss();
                 Log.d("nurse_assigned", response);
                 try {
-                    Employee employee = gson.fromJson(new JSONObject(response).toString(), Employee.class);
-                    if(employee.getContent().size() > 0){
+                    employeeID.clear();
+                    names.clear();
+                    codes.clear();
+                    license.clear();
+                    phoneNumbers.clear();
+                    addresss.clear();
+                    emails.clear();
+                    placeBirths.clear();
+                    dateBirths.clear();
+                    genders.clear();
+                    religions.clear();
+                    clinicsID.clear();
+                    clinicsNames.clear();
+                    roles.clear();
+                    Nurse nurse= gson.fromJson(new JSONObject(response).toString(), Nurse.class);
+                    if(nurse.getContent().size() > 0){
                         lyNurseAssigned.setVisibility(View.VISIBLE);
-//                        for(int i = 0; i<employee.getContent().size();i++){
-//                            Content content = employee.getContent().get(i);
-//
-//                        }
+                        for(int i = 0; i<nurse.getContent().size();i++){
+                            umbandung.com.digitalhomecare.Model.nurse.Content content = nurse.getContent().get(i);
+                            employeeID.add(content.getIdNurse().getId().toString());
+                            names.add(content.getIdNurse().getFullName());
+                            codes.add(content.getIdNurse().getNurseCode());
+                            license.add(content.getIdNurse().getSipp());
+                            roles.add("perawat");
+                            phoneNumbers.add(content.getIdNurse().getPhoneNumber());
+                            addresss.add(content.getIdNurse().getAddress());
+                            emails.add(content.getIdNurse().getEmail());
+                            placeBirths.add(content.getIdNurse().getPlaceBirth());
+                            dateBirths.add(content.getIdNurse().getDateBirth());
+                            genders.add(content.getIdNurse().getGender());
+                            religions.add(content.getIdNurse().getReligion());
+                            clinicsID.add(content.getIdNurse().getClinic().getId().toString());
+                            clinicsNames.add(content.getIdNurse().getClinic().getNameOfClinic());
+                        }
 
+                        mAdapter1 = new EmployeeRecyclerView(employeeID,names,codes,license,phoneNumbers,
+                                addresss,emails,placeBirths,dateBirths,
+                                genders,religions,clinicsID,clinicsNames, roles, employeeID.size());
+                        mAdapter1.notifyDataSetChanged();
+                        nurseRecyclerView.setAdapter(mAdapter1);
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                getDoctorAssignedList();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
+                getDoctorAssignedList();
             }
         }){
             @Override
@@ -259,14 +304,46 @@ public class FormAssign extends AppCompatActivity {
                 progressDialog.dismiss();
                 Log.d("doctor_assigned", response);
                 try {
-                    Employee employee = gson.fromJson(new JSONObject(response).toString(), Employee.class);
-                    if(employee.getContent().size() > 0){
+                    employeeID.clear();
+                    names.clear();
+                    codes.clear();
+                    license.clear();
+                    phoneNumbers.clear();
+                    addresss.clear();
+                    emails.clear();
+                    placeBirths.clear();
+                    dateBirths.clear();
+                    genders.clear();
+                    religions.clear();
+                    clinicsID.clear();
+                    clinicsNames.clear();
+                    roles.clear();
+                    Doctor doctor = gson.fromJson(new JSONObject(response).toString(), Doctor.class);
+                    if(doctor.getContent().size() > 0){
                         lyDoctorAssigned.setVisibility(View.VISIBLE);
-//                        for(int i = 0; i<employee.getContent().size();i++){
-//                            Content content = employee.getContent().get(i);
-//
-//                        }
+                        for(int i = 0; i<doctor.getContent().size();i++){
+                            umbandung.com.digitalhomecare.Model.doctor.Content content = doctor.getContent().get(i);
+                            employeeID.add(content.getIdDoctor().getId().toString());
+                            names.add(content.getIdDoctor().getFullName());
+                            codes.add(content.getIdDoctor().getDoctorCode());
+                            license.add(content.getIdDoctor().getRegisterNumber());
+                            roles.add("dokter");
+                            phoneNumbers.add(content.getIdDoctor().getPhoneNumber());
+                            addresss.add(content.getIdDoctor().getAddress());
+                            emails.add(content.getIdDoctor().getEmail());
+                            placeBirths.add(content.getIdDoctor().getPlaceBirth());
+                            dateBirths.add(content.getIdDoctor().getDateBirth());
+                            genders.add(content.getIdDoctor().getGender());
+                            religions.add(content.getIdDoctor().getReligion());
+                            clinicsID.add(content.getIdDoctor().getClinic().getId().toString());
+                            clinicsNames.add(content.getIdDoctor().getClinic().getNameOfClinic());
+                        }
 
+                        mAdapter2 = new EmployeeRecyclerView(employeeID,names,codes,license,phoneNumbers,
+                                addresss,emails,placeBirths,dateBirths,
+                                genders,religions,clinicsID,clinicsNames, roles, employeeID.size());
+                        mAdapter2.notifyDataSetChanged();
+                        doctorRecyclerView.setAdapter(mAdapter2);
                     }
 
                 } catch (JSONException e) {
@@ -354,15 +431,15 @@ public class FormAssign extends AppCompatActivity {
                             clinicsID.add(content.getClinic().getId().toString());
                             clinicsNames.add(content.getClinic().getNameOfClinic());
                         }
+
+                        mAdapter = new EmployeeRecyclerView(employeeID,names,codes,license,phoneNumbers,
+                                addresss,emails,placeBirths,dateBirths,
+                                genders,religions,clinicsID,clinicsNames, roles, employeeID.size());
+                        mAdapter.notifyDataSetChanged();
+                        recyclerView.setAdapter(mAdapter);
+                    }else{
+                        Toast.makeText(FormAssign.this, "Hasil Tidak ditemukan", Toast.LENGTH_SHORT).show();
                     }
-
-
-                    //Toast.makeText(FormAssign.this, obj.getString("address"), Toast.LENGTH_SHORT).show();
-                    mAdapter = new EmployeeRecyclerView(employeeID,names,codes,license,phoneNumbers,
-                            addresss,emails,placeBirths,dateBirths,
-                            genders,religions,clinicsID,clinicsNames, roles);
-                    mAdapter.notifyDataSetChanged();
-                    recyclerView.setAdapter(mAdapter);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

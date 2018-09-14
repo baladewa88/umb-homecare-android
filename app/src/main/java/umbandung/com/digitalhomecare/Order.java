@@ -22,11 +22,16 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -89,7 +94,7 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
         mContext = this;
 
         MySharedPrefernce mSettings = new MySharedPrefernce();
-        String[] datas = mSettings.getValue(Order.this);
+        final String[] datas = mSettings.getValue(Order.this);
 
 
 
@@ -97,7 +102,7 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
         Log.e("TOKEN ORDER",token);
         mApiInterface = ApiClient.getClient(token).create(ApiInterface.class);
 //        sendAndRequestResponse();
-        getKlinik();
+//        getKlinik();
 
 
 
@@ -254,31 +259,55 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
-                final String jsonText = "{" +
-                        "\"userPatient\" : {" +
-                        "\"id\" : 6 // id patient" +
-                        "}," +
-                        "\"transactionTypeId\" :{" +
-                        "\"id\" : 2  // type of transaction 1 for homecare and 2 for  laboratory" +
-                        "}," +
-                        "\"transactionStatusId\" : {" +
-                        "\"id\" : 2 // On Process = 2, On Validation = 1, Failed = 3, Cancelled = 4, 5 = Expire, 6 = Finish" +
-                        "}," +
-                        "\"paymentFixedPriceStatusId\":{" +
-                        "\"id\" : 2 // Unpaid = 2, Paid = 1" +
-                        "}," +
-                        "\"idClinic\" : {" +
-                        "\"id\" : 1 // id Clinic, clinic that selected by patient." +
-                        "}," +
-                        "\"serviceList\" : [{" +
-                        "\"id\" : 1t// id of services that selected by patient can be more than 0ne" +
-                        "},{" +
-                        "\"id\" : 2// id of services that selected by patient can be more than 0ne" +
-                        "}" +
-                        "]," +
-                        "\"addressToVisit\" : \"Jalan Kangkung 21 Bogor\"" +
-                        "\"date\" : "+System.currentTimeMillis()+" // date visit to home , this timestamp format in millisecond" +
-                        "}";
+                RequestQueue postReqQueue = Volley.newRequestQueue(getApplicationContext());
+                final JSONObject jsonOrder = new JSONObject();
+                try {
+                    jsonOrder.put("userPatient", new JSONObject().put("id", datas[8]));
+                    jsonOrder.put("transactionTypeId", new JSONObject().put("id", 1));
+                    jsonOrder.put("transactionStatusId", new JSONObject().put("id", 2));
+                    jsonOrder.put("paymentFixedPriceStatusId", new JSONObject().put("id", 2));
+                    KlinikUtil selectedKlinik = (KlinikUtil) spKlinik.getSelectedItem();
+                    jsonOrder.put("idClinic", new JSONObject().put("id", selectedKlinik.getId()));
+                    JSONArray serviceListJson = new JSONArray();
+                    for (Integer layanan : selectedLayanan) {
+                        Log.e("ID SERVICE: ", layanan.toString());
+                        serviceListJson.put(new JSONObject().put("id", layanan));
+                    }
+                    jsonOrder.put("serviceList", serviceListJson);
+                    jsonOrder.put("addressToVisit", datas[1]);
+                    jsonOrder.put("date", System.currentTimeMillis());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                final String stringOrder = jsonOrder.toString();
+                String urlPostOrder = "http://167.205.7.227:9028/api/transaction";
+                JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, urlPostOrder, jsonOrder, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "ERROR", Toast.LENGTH_SHORT).show();
+                        Log.e("assign", error.toString());
+                    }
+                }) {
+
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        HashMap<String, String> params = new HashMap<String, String>();
+                        params.put("Authorization", datas[7]);
+                        return params;
+                    }
+
+                };
+                postReqQueue.add(stringRequest);
+
 //                db = new V2DatabaseHandler(Order.this);
 //                db.addData(new V2SaveUtil(getDateTime(),
 //                        "Sutadi Triputra",
@@ -293,22 +322,7 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 //                    riArray.put(arrayLayanan.get(y).getJSONObject());
 ////					Toast.makeText(RasioItem.this, riArray.toString(), Toast.LENGTH_LONG).show();
 //                }
-
-                Call<PostPutDelOrder> postOrderCall = mApiInterface.postOrder("6","1");
-                postOrderCall.enqueue(new Callback<PostPutDelOrder>() {
-                    @Override
-                    public void onResponse(Call<PostPutDelOrder> call, retrofit2.Response<PostPutDelOrder> response) {
-                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<PostPutDelOrder> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "Penambahan Order Gagal => "+t.getMessage().toString(), Toast.LENGTH_LONG).show();
-
-                    }
-                });
-
-                            }
+            }
         });
     }
 

@@ -36,8 +36,8 @@ public class DashboardMedis extends AppCompatActivity{
                 }else if(position==1){ //Halaman Order
                     Intent iOrder = new Intent(DashboardMedis.this, OrderMedis.class);
                     startActivity(iOrder);
-                }else if(position==2){ //Halaman Transaksi
-                    Intent iTransaksi = new Intent(DashboardMedis.this, Transaksi.class);
+                }else if(position==2){ //Halaman OrderHistory
+                    Intent iTransaksi = new Intent(DashboardMedis.this, OrderHistory.class);
                     startActivity(iTransaksi);
                 }
             }

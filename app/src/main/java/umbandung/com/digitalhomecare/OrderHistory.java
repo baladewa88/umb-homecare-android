@@ -31,9 +31,9 @@ import umbandung.com.digitalhomecare.Model.transaksi.Transaksi;
  * Created by Arkhan on 8/23/2018.
  */
 
-public class OrderMedis extends AppCompatActivity {
+public class OrderHistory extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private TransaksiRecyclerView mAdapter;
+    private OrderHistoryRecyclerView mAdapter;
     private ProgressDialog progressDialog;
     private MySharedPrefernce mySharedPrefernce;
     private Gson gson;
@@ -43,7 +43,6 @@ public class OrderMedis extends AppCompatActivity {
     private List<String> dateOrders = new ArrayList<>();
     private List<String> patientsName = new ArrayList<>();
     private List<String> transactions = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +72,14 @@ public class OrderMedis extends AppCompatActivity {
         progressDialog.show();
 
         try {
-            final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
-            Log.d("Order, clinic_id", mySharedPrefernce.getValueByKey(this, "CLINIC_ID"));
-            //final String clinicID = "1"; //dev
-            final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByIdClinic?page=0&size=10&sort=ASC&sortField=id&clinicId=";
+            //final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
+            //Log.d("Order, clinic_id", mySharedPrefernce.getValueByKey(this, "CLINIC_ID"));
+            String[] datas = mySharedPrefernce.getValue(this);
+            final String patientId = datas[8]; //dev
+            final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByIdPatient?page=0&size=10&sort=ASC&sortField=id&patientId=";
             RequestQueue mRequestQueue = Volley.newRequestQueue(this);
 
-            StringRequest request = new StringRequest(Request.Method.GET, endpoint + clinicID, new Response.Listener<String>() {
+            StringRequest request = new StringRequest(Request.Method.GET, endpoint + patientId, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -100,7 +100,7 @@ public class OrderMedis extends AppCompatActivity {
                                 transactions.add(String.valueOf(content.getId()));
                             }
 
-                            mAdapter = new TransaksiRecyclerView(orderNumbers, dateOrders, patientsName, statuss, transactions);
+                            mAdapter = new OrderHistoryRecyclerView(orderNumbers, dateOrders, patientsName, statuss, transactions);
                             mAdapter.notifyDataSetChanged();
                             recyclerView.setAdapter(mAdapter);
                         }
@@ -120,7 +120,7 @@ public class OrderMedis extends AppCompatActivity {
                 @Override
                 public Map<String, String> getHeaders()
                 {
-                    HashMap<String, String>  params = new HashMap<String, String>();
+                    HashMap<String, String> params = new HashMap<String, String>();
                     params.put("Authorization", accesstoken);
 
                     return params;

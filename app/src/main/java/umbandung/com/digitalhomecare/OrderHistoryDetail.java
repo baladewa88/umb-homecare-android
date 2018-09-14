@@ -2,8 +2,8 @@ package umbandung.com.digitalhomecare;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +27,7 @@ import java.util.Map;
 import umbandung.com.digitalhomecare.Model.transaksi.Content;
 import umbandung.com.digitalhomecare.Model.transaksi.Transaksi;
 
-public class DetailTransaksi extends AppCompatActivity {
+public class OrderHistoryDetail extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private MySharedPrefernce mySharedPrefernce;
     private Gson gson;
@@ -38,7 +38,7 @@ public class DetailTransaksi extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_transaksi);
+        setContentView(R.layout.activity_detail_order_history);
         tvNomorOrder = (TextView) findViewById(R.id.nomor_order);
         tvNamaPasien = (TextView) findViewById(R.id.nama_pasien);
         tvKodePasien = (TextView) findViewById(R.id.kode_pasien);
@@ -57,15 +57,6 @@ public class DetailTransaksi extends AppCompatActivity {
         String orderid = mySharedPrefernce.getValueByKey(this, "ORDER_ID");
         Log.d("order_id detail", orderid);
         getDetailData(mySharedPrefernceValue[7], orderid);
-
-        Button assignBtn = (Button) findViewById(R.id.btn_assign);
-        assignBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), FormAssign.class);
-                v.getContext().startActivity(intent);
-            }
-        });
     }
 
     private void getDetailData(final String accesstoken, final String pOrderID) {
@@ -77,9 +68,8 @@ public class DetailTransaksi extends AppCompatActivity {
         progressDialog.show();
 
         try {
-            final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
-            Log.d("CLINIC_ID", mySharedPrefernce.getValueByKey(this, "CLINIC_ID"));
-            //final String clinicID = "1"; //dev
+            //final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
+            final String clinicID = "1"; //dev
             final String orderID = pOrderID;
             final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByFieldByIdClinic?page=0&size=10&sort=ASC&sortField=id&searchField=orderNumber&value="+pOrderID+"&clinicId="+clinicID;
             RequestQueue mRequestQueue = Volley.newRequestQueue(this);
@@ -88,7 +78,7 @@ public class DetailTransaksi extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     Log.d("detail trx: ",response);
-                    umbandung.com.digitalhomecare.Model.transaksi.Transaksi transaksi = null;
+                    Transaksi transaksi = null;
                     try {
                         transaksi = gson.fromJson(new JSONObject(response).toString(), Transaksi.class);
                         if(transaksi.getContent().size() > 0){

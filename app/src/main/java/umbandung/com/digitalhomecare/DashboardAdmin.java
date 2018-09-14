@@ -40,8 +40,8 @@ public class DashboardAdmin extends AppCompatActivity{
                 }else if(position==2){ //Halaman Order
                     Intent iOrder = new Intent(DashboardAdmin.this, Order.class);
                     startActivity(iOrder);
-                }else if(position==3){ //Halaman Transaksi
-                    Intent iTransaksi = new Intent(DashboardAdmin.this, Transaksi.class);
+                }else if(position==3){ //Halaman OrderHistory
+                    Intent iTransaksi = new Intent(DashboardAdmin.this, OrderHistory.class);
                     startActivity(iTransaksi);
                 }
             }

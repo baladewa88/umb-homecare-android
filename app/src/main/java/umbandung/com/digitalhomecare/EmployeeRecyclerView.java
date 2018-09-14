@@ -16,6 +16,7 @@ import java.util.List;
 
 class EmployeeRecyclerView extends RecyclerView.Adapter<EmployeeRecyclerView.ViewHolder>{
 
+    private final int size;
     private MySharedPrefernce mySharedPrefernce;
     private static String[] namesArray, codesArray, licensesArray,
             roleArray, addressArray, emailArray,
@@ -28,8 +29,9 @@ class EmployeeRecyclerView extends RecyclerView.Adapter<EmployeeRecyclerView.Vie
                                 List<String> codes, List<String> license, List<String> phoneNumbers,
                                 List<String> addresss, List<String> emails, List<String> placeBirths,
                                 List<String> dateBirths, List<String> genders, List<String> religions,
-                                List<String> clinicsID, List<String> clinicsNames, List<String> roles) {
+                                List<String> clinicsID, List<String> clinicsNames, List<String> roles, int pSize) {
 
+        size = pSize;
         mySharedPrefernce = new MySharedPrefernce();
         employeeIDarray = new String[employeeID.size()];
         namesArray = new String[names.size()];
@@ -89,7 +91,7 @@ class EmployeeRecyclerView extends RecyclerView.Adapter<EmployeeRecyclerView.Vie
 
     @Override
     public int getItemCount() {
-        return namesArray.length;
+        return size;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
