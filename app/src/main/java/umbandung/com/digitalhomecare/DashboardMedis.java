@@ -48,12 +48,11 @@ public class DashboardMedis extends AppCompatActivity{
     private int[] mThumbIds = {
             R.mipmap.homecare_profil,
             R.mipmap.homecare_order,
-            R.mipmap.homecare_transaksi,
-            R.mipmap.logout
+            R.mipmap.homecare_transaksi
     };
 
     String[] gridViewString = {
 
-            "PROFIL", "ORDER", "HISTORY", "LOG OUT"
+            "PROFIL", "ORDER", "HISTORY"
     };
 }

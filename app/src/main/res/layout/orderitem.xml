@@ -48,25 +48,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layoutLayanan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10px" >
-
-        <AutoCompleteTextView
-            android:id="@+id/etNamaBtp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
-            android:background="#21a1b7"
-            android:textColor="@color/textColorPrimary"
-            android:hint="Isikan Layanan"
-            android:padding="5dp" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spLayanan"></Spinner>
+        android:padding="10px">
 
 
     </LinearLayout>
