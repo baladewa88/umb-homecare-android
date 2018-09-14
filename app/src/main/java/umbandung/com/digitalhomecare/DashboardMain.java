@@ -1,8 +1,6 @@
 package umbandung.com.digitalhomecare;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -49,8 +47,8 @@ public class DashboardMain extends AppCompatActivity {
                 }else if(position==2){ //Halaman Order
                     Intent iOrder = new Intent(DashboardMain.this, Order.class);
                     startActivity(iOrder);
-                }else if(position==3){ //Halaman Transaksi
-                    Intent iTransaksi = new Intent(DashboardMain.this, Transaksi.class);
+                }else if(position==3){ //Halaman OrderHistory
+                    Intent iTransaksi = new Intent(DashboardMain.this, OrderHistory.class);
                     startActivity(iTransaksi);
                 }else if(position==4){
                     mSettings.clearSharedPreference(DashboardMain.this);
