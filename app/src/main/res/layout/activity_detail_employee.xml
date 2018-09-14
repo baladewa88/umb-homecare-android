@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="umbandung.com.digitalhomecare.DetailEmployee"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_name">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Nama"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_name"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Markonah"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_kode">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Kode"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_code"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="NUR0026"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_alamat">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Alamat"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_address"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Senayan GBK"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_telp">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Telephone"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_telp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="081341534601"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_lisence">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="License"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_license"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="ADCCCC1111"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_email">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Email"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_email"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="markonah@gmail.com "
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_placebday">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="TTL"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_ttl"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Jakarta, 17 April 1991 7:0:0 "
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_gender">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Gender"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_gender"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Perempuan"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_religion">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Religion"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_religion"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Kong Hu Chu "
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_status">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Status"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_status"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Active"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_clinic">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Klinik"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/employee_clinic"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Rumah Sakit Al Islam"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_pilih"
+            android:text="Pilih"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+</ScrollView>

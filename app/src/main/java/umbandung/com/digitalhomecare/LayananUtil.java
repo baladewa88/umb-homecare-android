@@ -6,51 +6,47 @@ package umbandung.com.digitalhomecare;
 
 public class LayananUtil {
 
-    private String id;
-    private String code;
-    private String name;
-    private String price;
+    private Integer id;
+    private String codeOfservices;
+    private String nameOfservices;
+    private Integer price;
 
-    public LayananUtil(){
-
-    }
-
-    public LayananUtil(String id, String code, String nama, String harga){
+    public LayananUtil(Integer id, String codeOfservices, String nameOfservices, Integer price) {
         this.id = id;
-        this.code = code;
-        this.name = nama;
-        this.price = harga;
+        this.codeOfservices = codeOfservices;
+        this.nameOfservices = nameOfservices;
+        this.price = price;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getCodeOfservices() {
+        return codeOfservices;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCodeOfservices(String codeOfservices) {
+        this.codeOfservices = codeOfservices;
     }
 
-    public String getName() {
-        return name;
+    public String getNameOfservices() {
+        return nameOfservices;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameOfservices(String nameOfservices) {
+        this.nameOfservices = nameOfservices;
     }
 
-    public String getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 }

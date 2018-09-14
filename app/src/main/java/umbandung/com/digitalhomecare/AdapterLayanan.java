@@ -1,4 +1,4 @@
-package umbandung.com.digitalhomecare.Adapter;
+package umbandung.com.digitalhomecare;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,9 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
-
-import umbandung.com.digitalhomecare.LayananUtil;
-import umbandung.com.digitalhomecare.R;
 
 /**
  * Created by Arkhan on 7/25/2018.
@@ -46,8 +43,6 @@ public class AdapterLayanan extends RecyclerView.Adapter<AdapterLayanan.MyViewHo
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         LayananUtil movie = moviesList.get(position);
-        holder.nama_layanan.setText(movie.getName());
-        holder.klinik.setText(movie.getCode());
         holder.harga.setText(movie.getPrice());
     }
 

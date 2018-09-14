@@ -1,31 +1,30 @@
-package umbandung.com.digitalhomecare.Model;
 
-import com.google.gson.annotations.Expose;
+package umbandung.com.digitalhomecare.Model.transaksi;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Sort_ {
+@SuppressWarnings("unused")
+public class Sort {
 
     @SerializedName("sorted")
-    @Expose
-    private Boolean sorted;
+    private Boolean mSorted;
     @SerializedName("unsorted")
-    @Expose
-    private Boolean unsorted;
+    private Boolean mUnsorted;
 
     public Boolean getSorted() {
-        return sorted;
+        return mSorted;
     }
 
     public void setSorted(Boolean sorted) {
-        this.sorted = sorted;
+        mSorted = sorted;
     }
 
     public Boolean getUnsorted() {
-        return unsorted;
+        return mUnsorted;
     }
 
     public void setUnsorted(Boolean unsorted) {
-        this.unsorted = unsorted;
+        mUnsorted = unsorted;
     }
 
 }
