@@ -73,9 +73,9 @@ public class OrderMedis extends AppCompatActivity {
         progressDialog.show();
 
         try {
-            //final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
-            //Log.d("Order, clinic_id", mySharedPrefernce.getValueByKey(this, "CLINIC_ID"));
-            final String clinicID = "1"; //dev
+            final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
+            Log.d("Order, clinic_id", mySharedPrefernce.getValueByKey(this, "CLINIC_ID"));
+            //final String clinicID = "1"; //dev
             final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByIdClinic?page=0&size=10&sort=ASC&sortField=id&clinicId=";
             RequestQueue mRequestQueue = Volley.newRequestQueue(this);
 

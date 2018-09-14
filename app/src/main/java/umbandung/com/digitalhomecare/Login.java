@@ -50,6 +50,7 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
     //Hubungan sama volley
     private RequestQueue mRequestQueue;
     private StringRequest mStringRequest;
+    private String clinicID;
 
 
     @Override
@@ -103,10 +104,11 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                     public void onResponse(String response) {
 
                         // response
-//                        Log.e("Response", response);
+                        Log.d("Response", response);
                         try {
                             json_obj = new JSONObject(response);
                             userData = new JSONObject(json_obj.getString("user"));
+                            clinicID = userData.getJSONObject("clinic").get("id").toString();
                             Log.e("TOKEN",json_obj.getString("token"));
                             Log.e("dateBirth",userData.getString("dateBirth"));
                             Log.e("nama",userData.getString("fullName"));
@@ -136,6 +138,8 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                                 startActivity(iMedis);
 
                             }else if(userData.getString("roles").equals("[\"ROLE_CLINIC\"]")){
+                                Log.d("CLINIC_ID", clinicID);
+                                mySharedPrefernce.store(Login.this, "CLINIC_ID", clinicID);
                                 Log.e("ROLES","CLINIC");
                                 Intent iKlinik = new Intent(Login.this, DashboardKlinik.class);
                                 startActivity(iKlinik);
@@ -171,6 +175,8 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                     }
                 }
         ) {
+
+
             @Override
             protected Map<String, String> getParams()
             {

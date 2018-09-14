@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 public class DashboardKlinik extends AppCompatActivity{
 
+    private MySharedPrefernce mySharedPrefernce;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +24,8 @@ public class DashboardKlinik extends AppCompatActivity{
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
 
+
+        mySharedPrefernce = new MySharedPrefernce();
         MedisAdapter adapterViewAndroid = new MedisAdapter(DashboardKlinik.this, gridViewString, mThumbIds);
         gridview.setAdapter(adapterViewAndroid);
 
@@ -37,6 +41,10 @@ public class DashboardKlinik extends AppCompatActivity{
                 }else if(position==1){ //Halaman Order
                     Intent iOrder = new Intent(DashboardKlinik.this, OrderMedis.class);
                     startActivity(iOrder);
+                }else if(position==2){
+                    mySharedPrefernce.clearSharedPreference(DashboardKlinik.this);
+                    Intent iTransaksi = new Intent(DashboardKlinik.this, Login.class);
+                    startActivity(iTransaksi);
                 }
             }
         });
@@ -45,11 +53,12 @@ public class DashboardKlinik extends AppCompatActivity{
     // references to our images
     private int[] mThumbIds = {
             R.mipmap.homecare_profil,
-            R.mipmap.homecare_transaksi
+            R.mipmap.homecare_transaksi,
+            R.mipmap.logout
     };
 
     String[] gridViewString = {
 
-            "PETUGAS MEDIS", "TRANSAKSI"
+            "PETUGAS MEDIS", "TRANSAKSI", "LOG OUT",
     };
 }

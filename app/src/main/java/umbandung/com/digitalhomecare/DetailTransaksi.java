@@ -77,8 +77,9 @@ public class DetailTransaksi extends AppCompatActivity {
         progressDialog.show();
 
         try {
-            //final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
-            final String clinicID = "1"; //dev
+            final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
+            Log.d("CLINIC_ID", mySharedPrefernce.getValueByKey(this, "CLINIC_ID"));
+            //final String clinicID = "1"; //dev
             final String orderID = pOrderID;
             final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByFieldByIdClinic?page=0&size=10&sort=ASC&sortField=id&searchField=orderNumber&value="+pOrderID+"&clinicId="+clinicID;
             RequestQueue mRequestQueue = Volley.newRequestQueue(this);
