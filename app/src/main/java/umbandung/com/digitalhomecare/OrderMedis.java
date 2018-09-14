@@ -88,7 +88,7 @@ public class OrderMedis extends AppCompatActivity {
                         patientsName.clear();
                         statuss.clear();
                         transactions.clear();
-                        Log.d("response: ",response);
+                        Log.d("order: ",response);
                         Transaksi transaksi = gson.fromJson(new JSONObject(response).toString(),Transaksi.class);
                         if(transaksi.getContent().size() > 0){
                             for(int i=0; i<transaksi.getContent().size();i++){

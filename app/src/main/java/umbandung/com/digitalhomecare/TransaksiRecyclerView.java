@@ -63,6 +63,7 @@ public class TransaksiRecyclerView extends RecyclerView.Adapter<TransaksiRecycle
             @Override
             public void onClick(View v) {
                 mySharedPrefernce.store(v.getContext(), "ORDER_ID", orderNumber[position]);
+                Log.d("transaction_id", transactionsID[position]);
                 mySharedPrefernce.store(v.getContext(), "TRX_ID", transactionsID[position]);
                 Intent intent = new Intent(v.getContext(), DetailTransaksi.class);
                 v.getContext().startActivity(intent);

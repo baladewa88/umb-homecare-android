@@ -53,7 +53,9 @@ public class DetailTransaksi extends AppCompatActivity {
         gson = new GsonBuilder().create();
         progressDialog = new ProgressDialog(this);
         String[] mySharedPrefernceValue = mySharedPrefernce.getValue(this);
+
         String orderid = mySharedPrefernce.getValueByKey(this, "ORDER_ID");
+        Log.d("order_id detail", orderid);
         getDetailData(mySharedPrefernceValue[7], orderid);
 
         Button assignBtn = (Button) findViewById(R.id.btn_assign);
@@ -78,13 +80,13 @@ public class DetailTransaksi extends AppCompatActivity {
             //final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
             final String clinicID = "1"; //dev
             final String orderID = pOrderID;
-            final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByIdClinic?page=0&size=10&sort=ASC&sortField=id&searchField=id&value="+pOrderID+"&clinicId="+clinicID;
+            final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByFieldByIdClinic?page=0&size=10&sort=ASC&sortField=id&searchField=orderNumber&value="+pOrderID+"&clinicId="+clinicID;
             RequestQueue mRequestQueue = Volley.newRequestQueue(this);
 
             StringRequest request = new StringRequest(Request.Method.GET, endpoint, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("response: ",response);
+                    Log.d("detail trx: ",response);
                     umbandung.com.digitalhomecare.Model.transaksi.Transaksi transaksi = null;
                     try {
                         transaksi = gson.fromJson(new JSONObject(response).toString(), Transaksi.class);
@@ -97,7 +99,7 @@ public class DetailTransaksi extends AppCompatActivity {
                             tvAlamatVisit.setText(content.getAddressToVisit());
                             tvNamaKlinik.setText(content.getIdClinic().getNameOfClinic());
                             tvStatus.setText(content.getTransactionStatusId().getStatus());
-                            tvTanggalTreatment.setText(DateUtil.dateFormatting(content.getDateTreatementStart()));
+                            tvTanggalTreatment.setText(content.getDateTreatementStart() == null ? "-" : DateUtil.dateFormatting(content.getDateTreatementStart()));
 
                         }
                     } catch (JSONException e) {
