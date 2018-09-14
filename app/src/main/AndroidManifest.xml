@@ -31,7 +31,8 @@
         <activity android:name=".DetailTransaksi" />
         <activity android:name=".FormAssign" />
         <activity android:name=".DetailEmployee"></activity>
-        <activity android:name=".Transaksi"/>
+        <activity android:name=".OrderHistory"/>
+        <activity android:name=".OrderHistoryDetail"/>
     </application>
 
 </manifest>
