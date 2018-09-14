@@ -43,8 +43,5 @@ public interface ApiInterface {
     @GET("/api/listOfservices/{id}")
     Call<List<LayananUtil>> getServices(@Path("id") String id);
 
-    @POST("/api/transaction")
-    Call<List<>>
-
 
 }
