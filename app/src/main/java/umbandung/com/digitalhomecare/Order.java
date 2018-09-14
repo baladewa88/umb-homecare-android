@@ -80,12 +80,13 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 
     JSONArray riArray = new JSONArray();
     private String token;
+    private Order mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.orderitem);
-
+        mContext = this;
 
         MySharedPrefernce mSettings = new MySharedPrefernce();
         String[] datas = mSettings.getValue(Order.this);
@@ -143,7 +144,7 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
                 harga = 0;
                 labelHarga.setText("Rp. " + String.format("%d", harga) + ",-");
                 for(int i = 0; i < dataLayanan.size(); i++) {
-                    CheckBox cb = new CheckBox(getApplicationContext());
+                    CheckBox cb = new CheckBox(mContext);
                     cb.setId(i);
                     cb.setText(dataLayanan.get(i).getNameOfservices() + " (" + String.format("%,d", dataLayanan.get(i).getPrice()) + ")");
                     cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -173,7 +174,7 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
         getClinics.enqueue(new Callback<List<KlinikUtil>>() {
             @Override
             public void onResponse(Call<List<KlinikUtil>> call, retrofit2.Response<List<KlinikUtil>> response) {
-                ArrayAdapter<KlinikUtil> adapter = new ArrayAdapter<KlinikUtil> (getApplicationContext(), android.R.layout.simple_spinner_item, response.body());
+                ArrayAdapter<KlinikUtil> adapter = new ArrayAdapter<KlinikUtil> (mContext, android.R.layout.simple_spinner_item, response.body());
                 spKlinik.setAdapter(adapter);
                 dataKlinik = response.body();
                 spKlinik.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
