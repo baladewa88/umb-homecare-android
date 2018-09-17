@@ -26,8 +26,8 @@ public class Profil extends AppCompatActivity {
         tvEmail = (TextView)findViewById(R.id.profil_email);
         tvPhone = (TextView)findViewById(R.id.profil_phone);
         tvSex = (TextView)findViewById(R.id.profil_sex);
-        tvRole = (TextView)findViewById(R.id.profil_role);
-        tvDob = (TextView)findViewById(R.id.profil_dob);
+//        tvRole = (TextView)findViewById(R.id.profil_role);
+//        tvDob = (TextView)findViewById(R.id.profil_dob);
 
         MySharedPrefernce mSettings = new MySharedPrefernce();
         String[] datas = mSettings.getValue(Profil.this);
@@ -37,8 +37,8 @@ public class Profil extends AppCompatActivity {
         tvEmail.setText(datas[2]);
         tvPhone.setText(datas[3]);
         tvSex.setText(datas[4]);
-        tvRole.setText(datas[5]);
-        tvDob.setText(datas[6]);
+//        tvRole.setText(datas[5]);
+//        tvDob.setText(datas[6]);
         tvToken = datas[7];
 
     }
