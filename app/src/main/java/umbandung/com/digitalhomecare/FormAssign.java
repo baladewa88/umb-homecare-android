@@ -370,8 +370,8 @@ public class FormAssign extends AppCompatActivity {
     }
 
     private void doSearch() {
-        //final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
-        final String clinicID = "1"; //dev
+        final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
+        //final String clinicID = "1"; //dev
         final String accesstoken = mySharedPrefernce.getValueByKey(this, mySharedPrefernce.PREFS_KEY);
         progressDialog.setMessage("Mohon Tunggu");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
