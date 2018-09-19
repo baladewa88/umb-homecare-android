@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +36,8 @@ public class OrderHistoryDetail extends AppCompatActivity {
     private TextView tvNomorOrder, tvNamaPasien, tvKodePasien,
                     tvTanggalOrder, tvAlamatVisit, tvNamaKlinik, tvStatus,
     tvTanggalTreatment;
+    private RecyclerView layananRc;
+    private ListLayananRecycleView mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,9 @@ public class OrderHistoryDetail extends AppCompatActivity {
         tvNamaKlinik = (TextView) findViewById(R.id.nama_klinik);
         tvStatus = (TextView) findViewById(R.id.status_transaksi);
         tvTanggalTreatment = (TextView) findViewById(R.id.tanggal_treatment);
+        layananRc = (RecyclerView) findViewById(R.id.layanan_rc);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        layananRc.setLayoutManager(mLayoutManager);
 
         mySharedPrefernce = new MySharedPrefernce();
         gson = new GsonBuilder().create();
@@ -92,7 +99,9 @@ public class OrderHistoryDetail extends AppCompatActivity {
                             tvNamaKlinik.setText(content.getIdClinic().getNameOfClinic());
                             tvStatus.setText(content.getTransactionStatusId().getStatus());
                             tvTanggalTreatment.setText(content.getDateTreatementStart() == null ? "-" : DateUtil.dateFormatting(content.getDateTreatementStart()));
-
+                            mAdapter = new ListLayananRecycleView(content.getServiceList());
+                            mAdapter.notifyDataSetChanged();
+                            layananRc.setAdapter(mAdapter);
                         }
                     } catch (JSONException e) {
                        e.printStackTrace();
