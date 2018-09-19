@@ -1,6 +1,7 @@
 package umbandung.com.digitalhomecare;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +60,7 @@ public class TransaksiRecyclerView extends RecyclerView.Adapter<TransaksiRecycle
         holder.tvTanggalOrder.setText(dateFormatting(dateOrder[position]));
         holder.tvNamaPasien.setText(patientsName[position]);
         holder.tvStatus.setText(statuss[position]);
+        stylingStatus(holder.tvStatus, statuss[position]);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +71,21 @@ public class TransaksiRecyclerView extends RecyclerView.Adapter<TransaksiRecycle
                 v.getContext().startActivity(intent);
             }
         });
+    }
+
+    private void stylingStatus(TextView tvStatus, String statuss) {
+        switch (statuss){
+            case "Failed":
+                tvStatus.setTextColor(Color.RED);
+                break;
+            case "Finish":
+                tvStatus.setTextColor(Color.GREEN);
+                break;
+            default:
+                tvStatus.setTextColor(Color.YELLOW);
+                break;
+        }
+
     }
 
     private String dateFormatting(String s) {

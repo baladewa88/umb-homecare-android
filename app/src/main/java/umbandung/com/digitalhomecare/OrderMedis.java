@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,6 +44,8 @@ public class OrderMedis extends AppCompatActivity {
     private List<String> dateOrders = new ArrayList<>();
     private List<String> patientsName = new ArrayList<>();
     private List<String> transactions = new ArrayList<>();
+    private LinearLayoutManager mLayoutManager;
+    private int skip = 10;
 
 
     @Override
@@ -56,11 +59,31 @@ public class OrderMedis extends AppCompatActivity {
         gson = new GsonBuilder().create();
         progressDialog = new ProgressDialog(this);
         recyclerView = (RecyclerView) findViewById(R.id.list_order_pasien);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        String[] mySharedPrefernceValue = mySharedPrefernce.getValue(this);
-
+        final String[] mySharedPrefernceValue = mySharedPrefernce.getValue(this);
         getListTransaction(mySharedPrefernceValue[7]);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());
+
+                int itemCount = mLayoutManager.getItemCount();
+                int pos = layoutManager.findLastCompletelyVisibleItemPosition();
+                if (itemCount - pos == 1) {
+                    if(itemCount >= 5) {
+                        getListTransactionScrolled(mySharedPrefernceValue[7], skip, itemCount);
+                    }
+                }
+            }
+        });
 
 
     }
@@ -103,6 +126,78 @@ public class OrderMedis extends AppCompatActivity {
                             mAdapter = new TransaksiRecyclerView(orderNumbers, dateOrders, patientsName, statuss, transactions);
                             mAdapter.notifyDataSetChanged();
                             recyclerView.setAdapter(mAdapter);
+                        }
+                        progressDialog.dismiss();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("error: ",error.toString());
+                    progressDialog.dismiss();
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders()
+                {
+                    HashMap<String, String>  params = new HashMap<String, String>();
+                    params.put("Authorization", accesstoken);
+
+                    return params;
+                }
+            };
+
+            mRequestQueue.add(request);
+        }catch (Error e){
+            e.printStackTrace();
+        }
+    }
+
+    private void getListTransactionScrolled(final String accesstoken, final int skipParam, final int itemCount) {
+        Log.d("accesstoken: ", accesstoken);
+        progressDialog.setMessage("Mohon Tunggu");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
+        try {
+            final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
+            final int page = skipParam/10;
+            Log.d("Order, clinic_id", mySharedPrefernce.getValueByKey(this, "CLINIC_ID"));
+            //final String clinicID = "1"; //dev
+            final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByIdClinic?page="+page+"&size=10&sort=ASC&sortField=id&clinicId="+clinicID;
+            RequestQueue mRequestQueue = Volley.newRequestQueue(this);
+
+            StringRequest request = new StringRequest(Request.Method.GET, endpoint + clinicID, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        //orderNumbers.clear();
+                        //dateOrders.clear();
+                        //patientsName.clear();
+                        //statuss.clear();
+                        //transactions.clear();
+                        Log.d("more: ",response);
+                        Transaksi transaksi = gson.fromJson(new JSONObject(response).toString(),Transaksi.class);
+                        if(transaksi.getContent().size() > 0){
+                            for(int i=0; i<transaksi.getContent().size();i++){
+                                Content content = transaksi.getContent().get(i);
+                                orderNumbers.add(content.getOrderNumber());
+                                dateOrders.add(content.getDateOrderIn());
+                                statuss.add(content.getTransactionStatusId().getStatus());
+                                patientsName.add(content.getUserPatient().getFullName());
+                                transactions.add(String.valueOf(content.getId()));
+                            }
+
+                            mAdapter = new TransaksiRecyclerView(orderNumbers, dateOrders, patientsName, statuss, transactions);
+                            mAdapter.notifyDataSetChanged();
+                            recyclerView.setAdapter(mAdapter);
+                            skip = skip + 10;
+                        }else{
+                            Toast.makeText(OrderMedis.this, "no more data", Toast.LENGTH_SHORT).show();
                         }
                         progressDialog.dismiss();
                     } catch (JSONException e) {
