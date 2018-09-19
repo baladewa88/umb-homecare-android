@@ -66,6 +66,15 @@ public class DetailTransaksi extends AppCompatActivity {
                 v.getContext().startActivity(intent);
             }
         });
+
+        Button editBtn = (Button) findViewById(R.id.btn_edit);
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), EditOrder.class);
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     private void getDetailData(final String accesstoken, final String pOrderID) {

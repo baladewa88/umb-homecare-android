@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -128,6 +129,9 @@ public class FormAssign extends AppCompatActivity {
         lyResult = (LinearLayout) findViewById(R.id.ly_result);
         lyNurseAssigned = (LinearLayout) findViewById(R.id.ly_nurse_assigned);
         lyDoctorAssigned = (LinearLayout) findViewById(R.id.ly_doctor_assigned);
+        TextView tvOrderNumber = (TextView) findViewById(R.id.nomor_order);
+
+
 
         //inisiasi
         nurseFieldMap = createNurseFieldMap();
@@ -199,6 +203,9 @@ public class FormAssign extends AppCompatActivity {
                 }
             }
         });
+
+        String orderid = mySharedPrefernce.getValueByKey(this, "ORDER_ID");
+        tvOrderNumber.setText(orderid);
 
         getNurseAssignedList();
     }
