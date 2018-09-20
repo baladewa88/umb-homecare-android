@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -26,6 +28,13 @@ public class DashboardKlinik extends AppCompatActivity{
 
 
         mySharedPrefernce = new MySharedPrefernce();
+        String[] datas = mySharedPrefernce.getValue(DashboardKlinik.this);
+        for(int i=0; i<datas.length; i++){
+            Log.e("DATAS "+i+" => ",datas[i]);
+        }
+        TextView nama = (TextView)findViewById(R.id.welcome_nama);
+        nama.setText("Selamat datang, "+datas[0]);
+
         MedisAdapter adapterViewAndroid = new MedisAdapter(DashboardKlinik.this, gridViewString, mThumbIds);
         gridview.setAdapter(adapterViewAndroid);
 

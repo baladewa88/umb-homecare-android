@@ -51,6 +51,7 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
     private RequestQueue mRequestQueue;
     private StringRequest mStringRequest;
     private String clinicID;
+    private JSONObject clinicData;
 
 
     @Override
@@ -108,55 +109,73 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                         try {
                             json_obj = new JSONObject(response);
                             userData = new JSONObject(json_obj.getString("user"));
+                            clinicData = new JSONObject(userData.getString("clinic"));
                             clinicID = userData.getJSONObject("clinic").get("id").toString();
-                            Log.e("TOKEN",json_obj.getString("token"));
-                            Log.e("dateBirth",userData.getString("dateBirth"));
-                            Log.e("nama",userData.getString("fullName"));
-                            Log.e("roles atas",userData.getString("roles"));
-                            Log.e("roles array",userData.getString("id"));
+                            Log.e("TOKEN", json_obj.getString("token"));
+                            Log.e("dateBirth", userData.getString("dateBirth"));
+                            Log.e("nama", userData.getString("fullName"));
+                            Log.e("roles atas", userData.getString("roles"));
+                            Log.e("roles array", userData.getString("id"));
+
+                            if(roleParam.equals("userPatient")){
+                                mySharedPrefernce.save(Login.this,
+                                        userData.getString("fullName"),
+                                        userData.getString("address"),
+                                        userData.getString("email"),
+                                        userData.getString("phoneNumber"),
+                                        userData.getString("gender"),
+                                        userData.getString("roles"),
+                                        userData.getString("dateBirth"),
+                                        json_obj.getString("token"),
+                                        userData.getString("id"),
+                                        userData.getString("deviceCode"),
+                                        clinicData.getString("id"));
+
+                            }else{
+                                mySharedPrefernce.save(Login.this,
+                                        userData.getString("fullName"),
+                                        userData.getString("address"),
+                                        userData.getString("email"),
+                                        userData.getString("phoneNumber"),
+                                        userData.getString("gender"),
+                                        userData.getString("roles"),
+                                        userData.getString("dateBirth"),
+                                        json_obj.getString("token"),
+                                        userData.getString("id"), "",
+                                        clinicData.getString("id"));
+
+                            }
 
 
-
-                            if(userData.getString("roles").equals("[\"ROLE_PATIENT\"]")){
-                                Log.e("ROLES","PASIEN");
+                            if (userData.getString("roles").equals("[\"ROLE_PATIENT\"]")) {
+                                Log.e("ROLES", "PASIEN");
                                 Intent iPasien = new Intent(Login.this, DashboardMain.class);
                                 startActivity(iPasien);
 
-                            }else if(userData.getString("roles").equals("[\"ROLE_ADMIN\"]")){
-                                Log.e("ROLES","ADMIN");
+                            } else if (userData.getString("roles").equals("[\"ROLE_ADMIN\"]")) {
+                                Log.e("ROLES", "ADMIN");
                                 Intent iAdmin = new Intent(Login.this, DashboardUtama.class);
                                 startActivity(iAdmin);
 
-                            }else if(userData.getString("roles").equals("[\"ROLE_NURSE\"]")){
-                                Log.e("ROLES","NURSE");
+                            } else if (userData.getString("roles").equals("[\"ROLE_NURSE\"]")) {
+                                Log.e("ROLES", "NURSE");
                                 Intent iMedis = new Intent(Login.this, DashboardMedis.class);
                                 startActivity(iMedis);
 
-                            }else if(userData.getString("roles").equals("[\"ROLE_DOCTOR\"]")){
-                                Log.e("ROLES","DOCTOR");
+                            } else if (userData.getString("roles").equals("[\"ROLE_DOCTOR\"]")) {
+                                Log.e("ROLES", "DOCTOR");
                                 Intent iMedis = new Intent(Login.this, DashboardMedis.class);
                                 startActivity(iMedis);
 
-                            }else if(userData.getString("roles").equals("[\"ROLE_CLINIC\"]")){
+                            } else if (userData.getString("roles").equals("[\"ROLE_CLINIC\"]")) {
                                 Log.d("CLINIC_ID", clinicID);
                                 mySharedPrefernce.store(Login.this, "CLINIC_ID", clinicID);
-                                Log.e("ROLES","CLINIC");
+                                Log.e("ROLES", "CLINIC");
                                 Intent iKlinik = new Intent(Login.this, DashboardKlinik.class);
                                 startActivity(iKlinik);
-                            }else {
-                                Log.e("ROLES","NONE");
+                            } else {
+                                Log.e("ROLES", "NONE");
                             }
-
-                            mySharedPrefernce.save(Login.this,
-                                    userData.getString("fullName"),
-                                    userData.getString("address"),
-                                    userData.getString("email"),
-                                    userData.getString("phoneNumber"),
-                                    userData.getString("gender"),
-                                    userData.getString("roles"),
-                                    userData.getString("dateBirth"),
-                                    json_obj.getString("token"),
-                                    userData.getString("id"));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
