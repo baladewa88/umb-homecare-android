@@ -20,7 +20,7 @@ public class MySharedPrefernce {
     public static final String KEY_ROLE = "role";
     public static final String KEY_DOB = "dob";
     public static final String KEY_ID = "id";
-    public static final String KEY_CLINIC_ID = "id";
+    public static final String KEY_CLINIC_ID = "clinic_id";
     public static final String KEY_TOKEN = "token";
     public static final String KEY_ECG = "ecg";
 

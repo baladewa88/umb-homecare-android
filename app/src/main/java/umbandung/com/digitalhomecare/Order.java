@@ -259,7 +259,7 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
-                RequestQueue postReqQueue = Volley.newRequestQueue(getApplicationContext());
+                RequestQueue postReqQueue = Volley.newRequestQueue(Order.this);
                 final JSONObject jsonOrder = new JSONObject();
                 try {
                     jsonOrder.put("userPatient", new JSONObject().put("id", datas[8]));

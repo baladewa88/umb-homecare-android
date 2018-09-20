@@ -43,6 +43,7 @@ public class OrderHistory extends AppCompatActivity {
     private List<String> dateOrders = new ArrayList<>();
     private List<String> patientsName = new ArrayList<>();
     private List<String> transactions = new ArrayList<>();
+    private String[] mySharedPrefernceValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +54,13 @@ public class OrderHistory extends AppCompatActivity {
 
         mySharedPrefernce = new MySharedPrefernce();
         gson = new GsonBuilder().create();
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(OrderHistory.this);
         recyclerView = (RecyclerView) findViewById(R.id.list_order_pasien);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        String[] mySharedPrefernceValue = mySharedPrefernce.getValue(this);
+        mySharedPrefernceValue = mySharedPrefernce.getValue(this);
+
+
 
         getListTransaction(mySharedPrefernceValue[7]);
 
@@ -74,8 +77,8 @@ public class OrderHistory extends AppCompatActivity {
         try {
             //final String clinicID = mySharedPrefernce.getValueByKey(this, "CLINIC_ID");
             //Log.d("Order, clinic_id", mySharedPrefernce.getValueByKey(this, "CLINIC_ID"));
-            String[] datas = mySharedPrefernce.getValue(this);
-            final String patientId = datas[8]; //dev
+            String[] datas = mySharedPrefernce.getValue(OrderHistory.this);
+            final String patientId = mySharedPrefernceValue[8]; //dev
             final String endpoint = "http://167.205.7.227:9028/api/transactionWithPaginationByIdPatient?page=0&size=10&sort=ASC&sortField=id&patientId=";
             RequestQueue mRequestQueue = Volley.newRequestQueue(this);
 
