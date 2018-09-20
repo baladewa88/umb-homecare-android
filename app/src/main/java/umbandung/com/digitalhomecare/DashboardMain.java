@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -26,6 +27,9 @@ public class DashboardMain extends AppCompatActivity {
         for(int i=0; i<datas.length; i++){
             Log.e("DATAS "+i+" => ",datas[i]);
         }
+
+        TextView nama = (TextView)findViewById(R.id.welcome_nama);
+        nama.setText("Selamat datang, "+datas[0]);
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
 

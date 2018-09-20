@@ -7,11 +7,14 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import umbandung.com.digitalhomecare.KlinikUtil;
 import umbandung.com.digitalhomecare.LayananUtil;
+import umbandung.com.digitalhomecare.Model.EcgHasil;
 import umbandung.com.digitalhomecare.Model.GetOrder;
 import umbandung.com.digitalhomecare.Model.PostPutDelOrder;
 
@@ -42,6 +45,12 @@ public interface ApiInterface {
 
     @GET("/api/listOfservices/{id}")
     Call<List<LayananUtil>> getServices(@Path("id") String id);
+
+    @GET("api/ecgWithPaginationByEcgCodeAndDate?page=0&size=200&sort=ASC&sortField=id")
+    Call<EcgHasil> getEcg(@Header("Authorization")  String authToken, @Query("ecgCode") String ecgCode, @Query("date") String date);
+
+    @GET("api/ecgWithPaginationByEcgCodeAndDate?page=0&size=200&sort=ASC&sortField=id")
+    Call<EcgHasil> getEcgData(@Query("ecgCode") String ecgCode, @Query("date") String date);
 
 
 }
