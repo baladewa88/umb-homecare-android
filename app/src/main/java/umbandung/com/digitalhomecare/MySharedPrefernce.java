@@ -20,12 +20,15 @@ public class MySharedPrefernce {
     public static final String KEY_ROLE = "role";
     public static final String KEY_DOB = "dob";
     public static final String KEY_ID = "id";
+    public static final String KEY_ECG = "ecg";
+    public static final String KEY_CLINIC_ID = "id";
 
     public MySharedPrefernce() {
         super();
     }
 
-    public void save(Context context, String nama, String alamat, String email,String phone, String sex, String role, String dob, String token, String id) {
+    public void save(Context context, String nama, String alamat, String email,String phone,
+                     String sex, String role, String dob, String token, String id, String deviceCode, String idClinic) {
         SharedPreferences settings;
         Editor editor;
 
@@ -41,14 +44,16 @@ public class MySharedPrefernce {
         editor.putString(KEY_ROLE, role); //3
         editor.putString(KEY_DOB, dob); //3
         editor.putString(PREFS_KEY, token); //3
-        editor.putString(KEY_ID, id); //3
+        editor.putString(KEY_ID, id); //3 //3
+        editor.putString(KEY_ECG, deviceCode); //3
+        editor.putString(KEY_CLINIC_ID, idClinic); //3
 
         editor.commit(); //4
     }
 
     public String[] getValue(Context context) {
         SharedPreferences settings;
-        String[] text = new String[9];
+        String[] text = new String[11];
 
         //settings = PreferenceManager.getDefaultSharedPreferences(context);
         settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -61,6 +66,8 @@ public class MySharedPrefernce {
         text[6] = settings.getString(KEY_DOB, null);
         text[7] = settings.getString(PREFS_KEY, null);
         text[8] = settings.getString(KEY_ID, null);
+        text[9] = settings.getString(KEY_ECG, null);
+        text[10] = settings.getString(KEY_CLINIC_ID, null);
 
         return text;
     }
@@ -86,5 +93,27 @@ public class MySharedPrefernce {
 
         editor.remove(PREFS_KEY);
         editor.commit();
+    }
+
+    public void store(Context context, String key, String value){
+        SharedPreferences settings;
+        Editor editor;
+
+        settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        editor = settings.edit();
+
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    public String getValueByKey(Context context, String key) {
+        SharedPreferences settings;
+        String text = null;
+
+        //settings = PreferenceManager.getDefaultSharedPreferences(context);
+        settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        text = settings.getString(key, null);
+
+        return text;
     }
 }

@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -26,7 +27,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import umbandung.com.digitalhomecare.Adapter.AdapterLayanan;
+import umbandung.com.digitalhomecare.Adapter.AdapterOrder;
 import umbandung.com.digitalhomecare.Adapter.AdapterTransaksi;
+import umbandung.com.digitalhomecare.Model.Content;
 import umbandung.com.digitalhomecare.Model.TransaksiGet;
 import umbandung.com.digitalhomecare.Model.TransaksiHasil;
 import umbandung.com.digitalhomecare.Rest.ApiClient;
@@ -39,13 +42,14 @@ import umbandung.com.digitalhomecare.Rest.ApiInterface;
 public class Transaksi extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private RecyclerView mRVFishPrice;
-    private AdapterTransaksi mAdapter;
+    private AdapterOrder mAdapter;
     private List<LayananUtil> list = new ArrayList<LayananUtil>();
     private SearchView mSearchView;
     ArrayList<TransaksiGet> data;
     private boolean berubahQuery = false;
     private String cekHasilKlik = "";
     ArrayList<LayananUtil> filteredModelList;
+    private ArrayList<OrderUtil> dataTransaksi = new ArrayList<OrderUtil>();
 
     MySharedPrefernce mSettings;
 
@@ -67,7 +71,7 @@ public class Transaksi extends AppCompatActivity implements SearchView.OnQueryTe
         mSettings = new MySharedPrefernce();
         String[] datas = mSettings.getValue(Transaksi.this);
 
-        mApiInterface = ApiClient.getClient().create(ApiInterface.class);
+//        mApiInterface = ApiClient.getClient().create(ApiInterface.class);
 
 //        Call<TransaksiGet> client = mApiInterface.historyTrx(datas[7], datas[8]);
         Log.e("TOKEN", datas[7]);
@@ -86,55 +90,87 @@ public class Transaksi extends AppCompatActivity implements SearchView.OnQueryTe
                 Log.e("HASIL JSON raw", ""+response.raw());
                 Log.e("HASIL JSON code", ""+response.code());
 
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                // parse json string to object
-                TransaksiHasil emp1 = gson.fromJson(""+response.body(), TransaksiHasil.class);
-                Log.e("PARSING JSON", ""+emp1);
+                TransaksiHasil a = response.body();
+                Log.e("Transaksi NumberID", a.getContent().get(0).getId().toString());
 
 
-//                mAdapter = new AdapterTransaksi(response.body());
-//                mRVFishPrice.setAdapter(mAdapter);
-//                setupSearchView();
-//                mRVFishPrice.setLayoutManager(new LinearLayoutManager(
-//                        Transaksi.this));
+//                try {
+//                    JSONObject oo = new JSONObject();
+//                    JSONArray aa = oo.getJSONArray("content");
+//                    Log.e("HASIL JSON", ""+aa);
 //
-//                mRVFishPrice.addOnItemTouchListener(new RecyclerTouchListener(
-//                        getApplicationContext(), mRVFishPrice,
-//                        new RecyclerTouchListener.ClickListener() {
+//                    for (int i=0; i<aa.length(); i++){
+//                        JSONObject contentItem = aa.getJSONObject(i);
+//                        JSONObject contentClinic = contentItem.getJSONObject("clinic");
+//                        JSONObject contentTipe = contentItem.getJSONObject("transactionTypeId");
+//                        JSONObject contentStatus = contentItem.getJSONObject("transactionStatusId");
 //
-//                            @Override
-//                            public void onLongClick(View view, int position) {
-//                                // TODO Auto-generated method stub
-//                                // Toast.makeText(getApplicationContext(),
-//                                // "Click Selected", Toast.LENGTH_SHORT).show();
-//                            }
+//                        OrderUtil data = new OrderUtil();
+//                        data.setId(contentItem.getString("id"));
+//                        data.setTanggal(contentItem.getString("dateOrderIn"));
+//                        data.setHarga(contentItem.getString("fixedPrice"));
+//                        data.setKlinik(contentClinic.getString("nameOfClinic"));
+//                        data.setTipe(contentTipe.getString("type"));
+//                        data.setStatus(contentStatus.getString("status"));
+//                        data.setOrderNumber(contentItem.getString("orderNumber"));
+//                        dataTransaksi.add(data);
+//                    }
 //
-//                            @Override
-//                            public void onClick(View view, int position) {
-//                                // TODO Auto-generated method stub
-//                                Intent intent = new Intent(
-//                                        getApplicationContext(),
-//                                        TransaksiDetail.class);
-//                                Bundle b = new Bundle();
-//                                if (berubahQuery == false) {
-//                                    b.putString("id", data.get(position)
-//                                            .getIdPasien());
-//                                    cekHasilKlik = data.get(position)
-//                                            .getIdPasien().toString();
-//                                } else if (berubahQuery == true) {
-//                                    b.putString("id", filteredModelList.get(position)
-//                                            .getId());
-//                                    cekHasilKlik = filteredModelList.get(position)
-//                                            .getId().toString();
-//                                }
-//                                intent.putExtras(b);
-//                                Log.e("Transaksi.java",
-//                                        "ID Pasien => "
-//                                                + data.get(position).getIdPasien());
-//
-//                                startActivity(intent);
-//                            }
-//                        }));
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                    Log.e("JSON ERROR", e.getMessage());
+//                }
+
+                List<Content> hasil = a.getContent();
+
+
+                Log.e("DATA TRANSAKSI", dataTransaksi.size()+"");
+                mAdapter = new AdapterOrder(dataTransaksi);
+                mRVFishPrice.setAdapter(mAdapter);
+                setupSearchView();
+                mRVFishPrice.setLayoutManager(new LinearLayoutManager(
+                        Transaksi.this));
+
+                mRVFishPrice.addOnItemTouchListener(new RecyclerTouchListener(
+                        getApplicationContext(), mRVFishPrice,
+                        new RecyclerTouchListener.ClickListener() {
+
+                            @Override
+                            public void onLongClick(View view, int position) {
+                                // TODO Auto-generated method stub
+                                // Toast.makeText(getApplicationContext(),
+                                // "Click Selected", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onClick(View view, int position) {
+                                // TODO Auto-generated method stub
+                                Intent intent = new Intent(
+                                        getApplicationContext(),
+                                        TransaksiDetail.class);
+                                Bundle b = new Bundle();
+                                if (berubahQuery == false) {
+                                    b.putString("id", data.get(position)
+                                            .getIdPasien());
+                                    cekHasilKlik = data.get(position)
+                                            .getIdPasien().toString();
+
+                                } else if (berubahQuery == true) {
+                                    b.putString("id", filteredModelList.get(position)
+                                            .getId().toString());
+                                    cekHasilKlik = filteredModelList.get(position)
+                                            .getId().toString();
+                                }
+                                intent.putExtras(b);
+                                Log.e("Transaksi.java",
+                                        "ID Pasien => "
+                                                + data.get(position).getIdPasien());
+
+                                startActivity(intent);
+                            }
+                        }));
+
+
             }
 
             @Override
@@ -143,6 +179,7 @@ public class Transaksi extends AppCompatActivity implements SearchView.OnQueryTe
 
             }
         });
+
 
     }
 

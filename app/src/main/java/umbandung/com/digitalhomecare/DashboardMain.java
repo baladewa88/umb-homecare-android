@@ -54,7 +54,7 @@ public class DashboardMain extends AppCompatActivity {
                     Intent iOrder = new Intent(DashboardMain.this, Order.class);
                     startActivity(iOrder);
                 }else if(position==3){ //Halaman Transaksi
-                    Intent iTransaksi = new Intent(DashboardMain.this, Transaksi.class);
+                    Intent iTransaksi = new Intent(DashboardMain.this, OrderHistory.class);
                     startActivity(iTransaksi);
                 }else if(position==4){ //Halaman Transaksi
                     mSettings.clearSharedPreference(DashboardMain.this);

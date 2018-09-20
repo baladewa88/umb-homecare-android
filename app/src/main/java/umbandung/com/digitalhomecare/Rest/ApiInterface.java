@@ -17,6 +17,8 @@ import retrofit2.http.Query;
 import umbandung.com.digitalhomecare.KlinikUtil;
 import umbandung.com.digitalhomecare.LayananUtil;
 import umbandung.com.digitalhomecare.Model.Auth;
+import umbandung.com.digitalhomecare.Model.EcgHasil;
+import umbandung.com.digitalhomecare.Model.EcgUtil;
 import umbandung.com.digitalhomecare.Model.GetOrder;
 import umbandung.com.digitalhomecare.Model.Order;
 import umbandung.com.digitalhomecare.Model.PostPutDelOrder;
@@ -35,8 +37,8 @@ public interface ApiInterface {
     Call<GetOrder> getOrder();
 
     @FormUrlEncoded
-    @POST("authenticate/{param}")
-    Call<Auth> getAuth(String param, String email, String password);
+    @POST("authenticate/")
+    Call<Auth> getAuth(@Query("param") String param, @Field("email") String email, @Field("password") String password);
 
     @POST("api/transaction")
     Call<PostPutDelOrder> postOrder(@Body Order order);
@@ -47,11 +49,24 @@ public interface ApiInterface {
     @GET("api/clinics")
     Call<List<KlinikUtil>> getKlinik(@Header("Authorization")  String authToken);
 
+    @GET("/api/clinics")
+    Call<List<KlinikUtil>> getClinics();
+
+
+    @GET("/api/listOfservices/{id}")
+    Call<List<LayananUtil>> getServices(@Path("id") String id);
+
     @GET("api/transactionWithPaginationByIdPatient?page=0&size=10&sort=ASC&sortField=id&patientId={patientId}")
     Call<TransaksiGet> historyTrx(@Header("Authorization")  String authToken, @Path("patientId") String patientId);
 
     @GET("api/transactionWithPaginationByIdPatient?page=0&size=10&sort=ASC&sortField=id")
     Call<TransaksiHasil> historyTrxNew(@Header("Authorization")  String authToken, @Query("patientId") String patientId);
+
+    @GET("api/ecgWithPaginationByEcgCodeAndDate?page=0&size=200&sort=ASC&sortField=id")
+    Call<EcgHasil> getEcg(@Header("Authorization")  String authToken, @Query("ecgCode") String ecgCode, @Query("date") String date);
+
+    @GET("api/ecgWithPaginationByEcgCodeAndDate?page=0&size=200&sort=ASC&sortField=id")
+    Call<EcgHasil> getEcgData(@Query("ecgCode") String ecgCode, @Query("date") String date);
 
     @FormUrlEncoded
     @PUT("kontak")

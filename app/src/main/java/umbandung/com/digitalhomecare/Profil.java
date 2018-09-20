@@ -26,20 +26,47 @@ public class Profil extends AppCompatActivity {
         tvEmail = (TextView)findViewById(R.id.profil_email);
         tvPhone = (TextView)findViewById(R.id.profil_phone);
         tvSex = (TextView)findViewById(R.id.profil_sex);
-        tvRole = (TextView)findViewById(R.id.profil_role);
-        tvDob = (TextView)findViewById(R.id.profil_dob);
+//        tvRole = (TextView)findViewById(R.id.profil_role);
+//        tvDob = (TextView)findViewById(R.id.profil_dob);
 
         MySharedPrefernce mSettings = new MySharedPrefernce();
         String[] datas = mSettings.getValue(Profil.this);
 
         tvNama.setText(datas[0]);
-        tvAlamat.setText(datas[1]);
-        tvEmail.setText(datas[2]);
-        tvPhone.setText(datas[3]);
-        tvSex.setText(datas[4]);
-        tvRole.setText(datas[5]);
-        tvDob.setText(datas[6]);
-        tvToken = datas[7];
+        if(datas[1].isEmpty()){
+            tvAlamat.setText(datas[1]);
+        }else{
+            tvAlamat.setText("");
+        }
+
+        if(datas[2].isEmpty()){
+            tvEmail.setText(datas[2]);
+        }else{
+            tvEmail.setText("");
+        }
+
+        if(datas[3].isEmpty()){
+            tvPhone.setText(datas[3]);
+        }else{
+            tvPhone.setText("");
+        }
+
+        if(datas[4].isEmpty()){
+            tvSex.setText(datas[4]);
+        }else{
+            tvSex.setText("");
+        }
+
+
+
+
+//        tvRole.setText(datas[5]);
+//        tvDob.setText(datas[6]);
+//        if(datas[7].isEmpty()){
+//            tvToken = datas[7];
+//        }else{
+//            tvSex.setText("");
+//        }
 
     }
 }

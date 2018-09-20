@@ -53,7 +53,7 @@ public class AdapterKlinik extends ArrayAdapter<String> {
 
         KlinikUtil offerData = items.get(position);
 
-        offTypeTv.setText(offerData.getNama());
+        offTypeTv.setText(offerData.getNameOfClinic());
 
         return view;
     }

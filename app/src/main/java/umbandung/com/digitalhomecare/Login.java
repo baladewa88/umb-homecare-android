@@ -52,7 +52,7 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
 
     ApiInterface mApiInterface;
 
-    JSONObject json_obj, userData;
+    JSONObject json_obj, userData, clinicData;
 
     //Hubungan sama volley
     private RequestQueue mRequestQueue;
@@ -65,9 +65,6 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
         setContentView(R.layout.login);
 
         mySharedPrefernce = new MySharedPrefernce();
-        String[] data = mySharedPrefernce.getValue(Login.this);
-
-        mApiInterface = ApiClient.getClient().create(ApiInterface.class);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
 //        roleParam = "userAdmin";
@@ -90,7 +87,7 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                     Toast.makeText(Login.this, "Email dan Password yang diberikan salah. Silahkan Ulangi", Toast.LENGTH_LONG).show();
 //                    btnLogin.setEnabled(true);
                 }else{
-                    postReq();
+                    postReq(roleParam);
 //                authLogin();
                 }
 
@@ -120,7 +117,7 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
             }
         });
     }
-    private void postReq(){
+    private void postReq(String role){
         final String urlLogin = "http://167.205.7.227:9028/authenticate/"+roleParam ;
         //RequestQueue initialized
         mRequestQueue = Volley.newRequestQueue(this);
@@ -136,22 +133,41 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                         try {
                             json_obj = new JSONObject(response);
                             userData = new JSONObject(json_obj.getString("user"));
-                            Log.e("TOKEN",json_obj.getString("token"));
-                            Log.e("dateBirth",userData.getString("dateBirth"));
-                            Log.e("nama",userData.getString("fullName"));
-                            Log.e("roles atas",userData.getString("roles"));
-                            Log.e("roles array",userData.getString("id"));
+                            clinicData = new JSONObject(userData.getString("clinic"));
+//                            Log.e("TOKEN",json_obj.getString("token"));
+//                            Log.e("dateBirth",userData.getString("dateBirth"));
+//                            Log.e("nama",userData.getString("fullName"));
+//                            Log.e("roles atas",userData.getString("roles"));
+                            Log.e("Clinic ID",clinicData.getString("id"));
 
-                            mySharedPrefernce.save(Login.this,
-                                    userData.getString("fullName"),
-                                    userData.getString("address"),
-                                    userData.getString("email"),
-                                    userData.getString("phoneNumber"),
-                                    userData.getString("gender"),
-                                    userData.getString("roles"),
-                                    userData.getString("dateBirth"),
-                                    json_obj.getString("token"),
-                                    userData.getString("id"));
+                            if(roleParam.equals("userPatient")){
+                                mySharedPrefernce.save(Login.this,
+                                        userData.getString("fullName"),
+                                        userData.getString("address"),
+                                        userData.getString("email"),
+                                        userData.getString("phoneNumber"),
+                                        userData.getString("gender"),
+                                        userData.getString("roles"),
+                                        userData.getString("dateBirth"),
+                                        json_obj.getString("token"),
+                                        userData.getString("id"),
+                                        userData.getString("deviceCode"),
+                                        clinicData.getString("id"));
+
+                            }else{
+                                mySharedPrefernce.save(Login.this,
+                                        userData.getString("fullName"),
+                                        userData.getString("address"),
+                                        userData.getString("email"),
+                                        userData.getString("phoneNumber"),
+                                        userData.getString("gender"),
+                                        userData.getString("roles"),
+                                        userData.getString("dateBirth"),
+                                        json_obj.getString("token"),
+                                        userData.getString("id"), "",
+                                        clinicData.getString("id"));
+
+                            }
 
                             ifLogin(userData.getString("roles"));
 
@@ -172,6 +188,7 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                     public void onErrorResponse(VolleyError error) {
                         // error
                         Log.e("Error.Response", "error response =>"+urlLogin+" ==> "+error.toString());
+                        Toast.makeText(getApplicationContext(), "Koneksi internet anda bermasalah. Silahkan coba lagi", Toast.LENGTH_LONG).show();
                     }
                 }
         ) {

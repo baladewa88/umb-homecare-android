@@ -48,25 +48,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layoutLayanan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10px" >
-
-        <AutoCompleteTextView
-            android:id="@+id/etNamaBtp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
-            android:background="#21a1b7"
-            android:textColor="@color/textColorPrimary"
-            android:hint="Isikan Layanan"
-            android:padding="5dp" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spLayanan"></Spinner>
+        android:padding="10px">
 
 
     </LinearLayout>
@@ -77,14 +63,6 @@
         android:orientation="horizontal"
         android:padding="10px" >
 
-        <Button
-            android:id="@+id/btnTambahJenisBtp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Tambah Layanan"
-            android:padding="5dp"
-            android:textColor="#ffffff" />
 
         <Button
             android:id="@+id/btnHitungRasio"
@@ -95,14 +73,7 @@
             android:padding="5dp"
             android:textColor="#ffffff" />
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Batal Order"
-            android:padding="5dp"
-            android:textColor="#ffffff" />
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

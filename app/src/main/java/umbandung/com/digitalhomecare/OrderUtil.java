@@ -6,18 +6,61 @@ package umbandung.com.digitalhomecare;
 
 public class OrderUtil {
 
-    private String tanggal, harga;
-    private String[] medis, layanan;
+    private String id, tanggal, harga, klinik, tipe, status, orderNumber;
 
-    public OrderUtil(){
+    public OrderUtil() {
 
     }
 
-    public OrderUtil(String tanggal, String harga, String[] medis, String[] layanan){
+    public OrderUtil(String id, String tanggal, String harga, String klinik, String tipe, String status, String orderNumber) {
+        this.id = id;
+
         this.tanggal = tanggal;
         this.harga = harga;
-        this.medis = medis;
-        this.layanan = layanan;
+        this.klinik = klinik;
+        this.tipe = tipe;
+        this.status = status;
+        this.orderNumber = orderNumber;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getKlinik() {
+        return klinik;
+    }
+
+    public void setKlinik(String klinik) {
+        this.klinik = klinik;
+    }
+
+    public String getTipe() {
+        return tipe;
+    }
+
+    public void setTipe(String tipe) {
+        this.tipe = tipe;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public String getTanggal() {
@@ -36,19 +79,4 @@ public class OrderUtil {
         this.harga = harga;
     }
 
-    public String[] getMedis() {
-        return medis;
-    }
-
-    public void setMedis(String[] medis) {
-        this.medis = medis;
-    }
-
-    public String[] getLayanan() {
-        return layanan;
-    }
-
-    public void setLayanan(String[] layanan) {
-        this.layanan = layanan;
-    }
 }

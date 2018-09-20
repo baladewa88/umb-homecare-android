@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -15,12 +16,19 @@ import android.widget.Toast;
 
 public class DashboardKlinik extends AppCompatActivity{
 
+    private MySharedPrefernce mySharedPrefernce;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard_medis);
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
+
+
+        mySharedPrefernce = new MySharedPrefernce();
+        String a[] = mySharedPrefernce.getValue(DashboardKlinik.this);
+        Log.e("KLINIK ID", a[10]);
 
         MedisAdapter adapterViewAndroid = new MedisAdapter(DashboardKlinik.this, gridViewString, mThumbIds);
         gridview.setAdapter(adapterViewAndroid);
@@ -37,6 +45,10 @@ public class DashboardKlinik extends AppCompatActivity{
                 }else if(position==1){ //Halaman Order
                     Intent iOrder = new Intent(DashboardKlinik.this, OrderMedis.class);
                     startActivity(iOrder);
+                }else if(position==2){
+                    mySharedPrefernce.clearSharedPreference(DashboardKlinik.this);
+                    Intent iTransaksi = new Intent(DashboardKlinik.this, Login.class);
+                    startActivity(iTransaksi);
                 }
             }
         });

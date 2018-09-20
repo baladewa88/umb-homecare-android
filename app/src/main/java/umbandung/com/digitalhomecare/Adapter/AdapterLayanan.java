@@ -46,8 +46,8 @@ public class AdapterLayanan extends RecyclerView.Adapter<AdapterLayanan.MyViewHo
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         LayananUtil movie = moviesList.get(position);
-        holder.nama_layanan.setText(movie.getName());
-        holder.klinik.setText(movie.getCode());
+        holder.nama_layanan.setText(movie.getNameOfservices());
+        holder.klinik.setText(movie.getCodeOfservices());
         holder.harga.setText(movie.getPrice());
     }
 

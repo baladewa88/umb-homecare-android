@@ -55,7 +55,7 @@ public class AdapterSpinnerLayanan extends ArrayAdapter<String> {
 
         LayananUtil offerData = items.get(position);
 
-        offTypeTv.setText(offerData.getName());
+        offTypeTv.setText(offerData.getNameOfservices());
         harga.setText(offerData.getPrice());
 
         return view;

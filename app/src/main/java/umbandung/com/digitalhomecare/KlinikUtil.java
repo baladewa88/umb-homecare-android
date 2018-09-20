@@ -6,7 +6,15 @@ package umbandung.com.digitalhomecare;
 
 public class KlinikUtil {
 
-    private String id, nama, kode, alamat, status;
+    private String id, nameOfClinic, codeOfClinic, address, status;
+
+    public KlinikUtil(String id, String nameOfClinic, String codeOfClinic, String address, String status) {
+        this.id = id;
+        this.nameOfClinic = nameOfClinic;
+        this.codeOfClinic = codeOfClinic;
+        this.address = address;
+        this.status = status;
+    }
 
     public String getId() {
         return id;
@@ -16,28 +24,28 @@ public class KlinikUtil {
         this.id = id;
     }
 
-    public String getNama() {
-        return nama;
+    public String getNameOfClinic() {
+        return nameOfClinic;
     }
 
-    public void setNama(String nama) {
-        this.nama = nama;
+    public void setNameOfClinic(String nameOfClinic) {
+        this.nameOfClinic = nameOfClinic;
     }
 
-    public String getKode() {
-        return kode;
+    public String getCodeOfClinic() {
+        return codeOfClinic;
     }
 
-    public void setKode(String kode) {
-        this.kode = kode;
+    public void setCodeOfClinic(String codeOfClinic) {
+        this.codeOfClinic = codeOfClinic;
     }
 
-    public String getAlamat() {
-        return alamat;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAlamat(String alamat) {
-        this.alamat = alamat;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getStatus() {
@@ -48,16 +56,7 @@ public class KlinikUtil {
         this.status = status;
     }
 
-    public KlinikUtil(String id, String nama, String kode, String alamat, String status){
-        this.id = id;
-        this.nama = nama;
-        this.kode = kode;
-        this.alamat = alamat;
-        this.status = status;
-
+    public String toString() {
+        return this.nameOfClinic;
     }
-
-    public KlinikUtil(){
-
-    };
 }
