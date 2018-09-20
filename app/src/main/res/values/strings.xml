@@ -1,16 +1,16 @@
 <resources>
-    <string name="app_name">DigitalHomeCare</string>
+    <string name="app_name">Home Care Digital Medical System</string>
     <string-array name="role">
-        <item>Admin</item>
+        <!--<item>Admin</item>-->
         <item>Pasien</item>
         <item>Klinik</item>
-        <item>Perawat</item>
-        <item>Dokter</item>
+        <!--<item>Perawat</item>-->
+        <!--<item>Dokter</item>-->
     </string-array>
 
     <string-array name="klinik">
         <item>RS. Al Islam Bandung</item>
-        <item>Klinik Ananda</item>
+        <item>Klinik Ansdddsfsdgs</item>
         <item>Homecare Salman</item>
     </string-array>
 

@@ -1,11 +1,6 @@
 package umbandung.com.digitalhomecare;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +22,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -32,13 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,9 +44,6 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import umbandung.com.digitalhomecare.Adapter.AdapterKlinik;
-import umbandung.com.digitalhomecare.Adapter.AdapterSpinnerLayanan;
-import umbandung.com.digitalhomecare.Model.GetOrder;
 import umbandung.com.digitalhomecare.Model.PostPutDelOrder;
 import umbandung.com.digitalhomecare.Rest.ApiClient;
 import umbandung.com.digitalhomecare.Rest.ApiInterface;
@@ -65,11 +55,11 @@ import umbandung.com.digitalhomecare.Rest.ApiInterface;
 public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemClickListener{
 
     TextView labelTanggal, labelHarga;
-    Spinner listKlinik;
+    Spinner spKlinik;
     AutoCompleteTextView jenisLayanan;
     Button btnRasioItem, btnOrder, btnCancel;
 //    String[] listLayanan, listHarga;
-    String harga ="0";
+    Integer harga = 0;
     String txtJenisPangan;
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
@@ -83,10 +73,10 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
     private RequestQueue mRequestQueue;
     private StringRequest mStringRequest;
     private String urlKlinik = "http://167.205.7.227:9028/api/clinics/";
-    private String urlLayanan = "http://167.205.7.227:9028/api/listOfServices/1";
-    ArrayList<LayananUtil> dataDevice;
-    ArrayList<KlinikUtil> dataKlinik;
-    Spinner spLayanan;
+    private String urlLayanan = "http://167.205.7.227:9028/api/listOfservices/1";
+    List<LayananUtil> dataLayanan;
+    List<KlinikUtil> dataKlinik;
+    List<Integer> selectedLayanan = new ArrayList<Integer>();
 
     //hubungan sama retrofit
     public ApiInterface mApiInterface;
@@ -95,29 +85,24 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 
     JSONArray riArray = new JSONArray();
     private String token;
+    private Order mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.orderitem);
-
+        mContext = this;
 
         MySharedPrefernce mSettings = new MySharedPrefernce();
-        String[] datas = mSettings.getValue(Order.this);
+        final String[] datas = mSettings.getValue(Order.this);
 
-        dataDevice = new ArrayList<LayananUtil>();
-        dataKlinik = new ArrayList<KlinikUtil>();
 
-        mApiInterface = ApiClient.getClient().create(ApiInterface.class);
 
         token = datas[7];
         Log.e("TOKEN ORDER",token);
+        mApiInterface = ApiClient.getClient(token).create(ApiInterface.class);
 //        sendAndRequestResponse();
 //        getKlinik();
-        getSecret();
-        getKlinikRetro();
-        Log.e("Isi data device", ""+dataDevice.size());
-//        Log.e("Isi data klinik", ""+dataDevice.size());
 
 
 
@@ -150,16 +135,81 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
         labelTanggal.setText(hari+", "+today+" WIB");
 
         labelHarga = (TextView)findViewById(R.id.label_harga);
-        labelHarga.setText("Rp. 0,-");
+        labelHarga.setText("Rp. " + harga +",-");
+        final LinearLayout lLayoutLayanan = (LinearLayout) findViewById(R.id.layoutLayanan);
 
-        listKlinik = (Spinner) findViewById(R.id.sp_klinik);
+        spKlinik = (Spinner) findViewById(R.id.sp_klinik);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.klinik, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        listKlinik.setAdapter(adapter);
+        Call<List<KlinikUtil>> getClinics = mApiInterface.getClinics();
+        final Callback<List<LayananUtil>> getServicesCallback = new Callback<List<LayananUtil>>() {
+            @Override
+            public void onResponse(Call<List<LayananUtil>> call, retrofit2.Response<List<LayananUtil>> response) {
+                selectedLayanan.removeAll(selectedLayanan);
+                dataLayanan = response.body();
+                harga = 0;
+                labelHarga.setText("Rp. " + String.format("%d", harga) + ",-");
+                for(int i = 0; i < dataLayanan.size(); i++) {
+                    CheckBox cb = new CheckBox(mContext);
+                    cb.setId(i);
+                    cb.setText(dataLayanan.get(i).getNameOfservices() + " (" + String.format("%,d", dataLayanan.get(i).getPrice()) + ")");
+                    cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if(isChecked) {
+                                harga += dataLayanan.get(buttonView.getId()).getPrice();
+                                labelHarga.setText("Rp. " + String.format("%,d", harga) + ",-");
+                                selectedLayanan.add(dataLayanan.get(buttonView.getId()).getId());
+                            }
+                            else {
+                                harga -= dataLayanan.get(buttonView.getId()).getPrice();
+                                labelHarga.setText("Rp. " + String.format("%,d", harga) + ",-");
+                                selectedLayanan.remove(dataLayanan.get(buttonView.getId()).getId());
+                            }
+                        }
+                    });
+                    lLayoutLayanan.addView(cb);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LayananUtil>> call, Throwable t) {
+
+            }
+        };
+        getClinics.enqueue(new Callback<List<KlinikUtil>>() {
+            @Override
+            public void onResponse(Call<List<KlinikUtil>> call, retrofit2.Response<List<KlinikUtil>> response) {
+                ArrayAdapter<KlinikUtil> adapter = new ArrayAdapter<KlinikUtil> (mContext, android.R.layout.simple_spinner_item, response.body());
+                spKlinik.setAdapter(adapter);
+                dataKlinik = response.body();
+                spKlinik.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        lLayoutLayanan.removeAllViews();
+                        KlinikUtil selectedKlinik = dataKlinik.get(position);
+                        Call <List<LayananUtil>> getServices = mApiInterface.getServices(selectedKlinik.getId());
+                        getServices.enqueue(getServicesCallback);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<List<KlinikUtil>> call, Throwable t) {
+
+            }
+        });
+
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+//                R.array.klinik, android.R.layout.simple_spinner_item);
+//        // Specify the layout to use when the list of choices appears
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        // Apply the adapter to the spinner
+//        listKlinik.setAdapter(adapter);
 
 //        listLayanan = getResources().getStringArray(R.array.layanan);
 //        listHarga = getResources().getStringArray(R.array.layananharga);
@@ -172,14 +222,11 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
         myRecyclerView.setAdapter(myRecyclerViewAdapter);
         myRecyclerView.setLayoutManager(linearLayoutManager);
 
-        jenisLayanan = (AutoCompleteTextView) findViewById(R.id.etNamaBtp);
 
 //        ArrayAdapter<String> adapterGolBtp = new ArrayAdapter<String>(
 //                getApplicationContext(), R.layout.rasio_list,
 //                listLayanan);
 //        jenisLayanan.setAdapter(adapterGolBtp);
-
-        spLayanan = (Spinner)findViewById(R.id.spLayanan);
 
 
 //        spLayanan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -200,38 +247,11 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 //            }
 //        });
 
-        getSecret();    //Get List Layanan
-        getKlinikRetro(); // Get List Klinik
-
 
         btnRasioItem = (Button) findViewById(R.id.btnTambahJenisBtp);
-        btnRasioItem.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View arg0) {
-                // TODO Auto-generated method stub
-                String newName = jenisLayanan.getText().toString();
-
-
-//				Toast.makeText(getApplicationContext(), "Counted Recyclerview Item => "+myRecyclerViewAdapter.getItemCount(), Toast.LENGTH_LONG).show();
-
-                    if(!newName.equals("")){
-                        if(myRecyclerViewAdapter.getItemCount()>1){
-                            myRecyclerViewAdapter.add(1, newName);
-                        }else{
-                            myRecyclerViewAdapter.add(0, newName);
-                        }
-
-                        arrayLayanan.add(new OrderLayananUtil("",newName, "", ""));
-                        jenisLayanan.setText("");
-                    }
-
-                labelHarga.setText("Rp. "+harga+",-");
-
-
-            }
-        });
-
+//        @Override
+//        public void onLoad
 
         btnOrder = (Button)findViewById(R.id.btnHitungRasio);
         btnOrder.setOnClickListener(new View.OnClickListener() {
@@ -239,31 +259,55 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
-                final String jsonText = "{" +
-                        "\"userPatient\" : {" +
-                        "\"id\" : 6 // id patient" +
-                        "}," +
-                        "\"transactionTypeId\" :{" +
-                        "\"id\" : 2  // type of transaction 1 for homecare and 2 for  laboratory" +
-                        "}," +
-                        "\"transactionStatusId\" : {" +
-                        "\"id\" : 2 // On Process = 2, On Validation = 1, Failed = 3, Cancelled = 4, 5 = Expire, 6 = Finish" +
-                        "}," +
-                        "\"paymentFixedPriceStatusId\":{" +
-                        "\"id\" : 2 // Unpaid = 2, Paid = 1" +
-                        "}," +
-                        "\"idClinic\" : {" +
-                        "\"id\" : 1 // id Clinic, clinic that selected by patient." +
-                        "}," +
-                        "\"serviceList\" : [{" +
-                        "\"id\" : 1t// id of services that selected by patient can be more than 0ne" +
-                        "},{" +
-                        "\"id\" : 2// id of services that selected by patient can be more than 0ne" +
-                        "}" +
-                        "]," +
-                        "\"addressToVisit\" : \"Jalan Kangkung 21 Bogor\"" +
-                        "\"date\" : "+System.currentTimeMillis()+" // date visit to home , this timestamp format in millisecond" +
-                        "}";
+                RequestQueue postReqQueue = Volley.newRequestQueue(getApplicationContext());
+                final JSONObject jsonOrder = new JSONObject();
+                try {
+                    jsonOrder.put("userPatient", new JSONObject().put("id", datas[8]));
+                    jsonOrder.put("transactionTypeId", new JSONObject().put("id", 1));
+                    jsonOrder.put("transactionStatusId", new JSONObject().put("id", 2));
+                    jsonOrder.put("paymentFixedPriceStatusId", new JSONObject().put("id", 2));
+                    KlinikUtil selectedKlinik = (KlinikUtil) spKlinik.getSelectedItem();
+                    jsonOrder.put("idClinic", new JSONObject().put("id", selectedKlinik.getId()));
+                    JSONArray serviceListJson = new JSONArray();
+                    for (Integer layanan : selectedLayanan) {
+                        Log.e("ID SERVICE: ", layanan.toString());
+                        serviceListJson.put(new JSONObject().put("id", layanan));
+                    }
+                    jsonOrder.put("serviceList", serviceListJson);
+                    jsonOrder.put("addressToVisit", datas[1]);
+                    jsonOrder.put("date", System.currentTimeMillis());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                final String stringOrder = jsonOrder.toString();
+                String urlPostOrder = "http://167.205.7.227:9028/api/transaction";
+                JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, urlPostOrder, jsonOrder, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "ERROR", Toast.LENGTH_SHORT).show();
+                        Log.e("assign", error.toString());
+                    }
+                }) {
+
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        HashMap<String, String> params = new HashMap<String, String>();
+                        params.put("Authorization", datas[7]);
+                        return params;
+                    }
+
+                };
+                postReqQueue.add(stringRequest);
+
 //                db = new V2DatabaseHandler(Order.this);
 //                db.addData(new V2SaveUtil(getDateTime(),
 //                        "Sutadi Triputra",
@@ -278,134 +322,10 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
 //                    riArray.put(arrayLayanan.get(y).getJSONObject());
 ////					Toast.makeText(RasioItem.this, riArray.toString(), Toast.LENGTH_LONG).show();
 //                }
-
-
-               postOrderRequest();
-                
-                            }
+            }
         });
     }
 
-    private void postOrderRequest(){
-
-        umbandung.com.digitalhomecare.Model.Order orderData = new umbandung.com.digitalhomecare.Model.Order();
-        Call<PostPutDelOrder> responseOrder = mApiInterface.postOrder(orderData);
-
-        responseOrder.enqueue(new Callback<PostPutDelOrder>() {
-            @Override
-            public void onResponse(Call<PostPutDelOrder> call, retrofit2.Response<PostPutDelOrder> response) {
-
-                Toast.makeText(getApplicationContext(), "Sukses => "+response.body().getMessage(), Toast.LENGTH_LONG).show();
-
-            }
-
-            @Override
-            public void onFailure(Call<PostPutDelOrder> call, Throwable t) {
-
-                Toast.makeText(getApplicationContext(), "error order", Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-
-    }
-
-    private void getSecret(){
-
-        Call<List<LayananUtil>> layanan = mApiInterface.getSecret(token);
-        layanan.enqueue(new Callback<List<LayananUtil>>() {
-            @Override
-            public void onResponse(Call<List<LayananUtil>> call, retrofit2.Response<List<LayananUtil>> response) {
-
-                List<LayananUtil> tempLayanan = response.body();
-
-//                try {
-////                    JSONObject json_obj = new JSONObject(response.toString());
-////                    Log.e("JSON RESPONSE",""+json_obj);
-////                    JSONArray jsonResponse  = json_obj.
-//                    Log.e("List Layanan", response.toString())
-//                    JSONArray jsonResponse = new JSONArray(response);
-//
-//                    for (int i=0; i<jsonResponse.length(); i++){
-//                        JSONObject koordinat = jsonResponse.getJSONObject(i);
-//                        LayananUtil data = new LayananUtil();
-//                        data.setId(koordinat.getString("id"));
-//                        data.setName(koordinat.getString("nameOfservices"));
-//                        data.setCode(koordinat.getString("codeOfservices"));
-//                        data.setPrice(koordinat.getString("price"));
-//                        dataDevice.add(data);
-//                    }
-//                } catch (JSONException e) {
-//                    Log.e("ERROR JSON", e.toString());
-//                    e.printStackTrace();
-//                }
-//
-//                ArrayAdapter<LayananUtil> adapterLayanan = new ArrayAdapter<LayananUtil>(Order.this,
-//                        android.R.layout.simple_spinner_dropdown_item, tempLayanan);
-
-                for(int y =0; y<tempLayanan.size(); y++){
-                    Log.e("TEMP LAYANAN Nama", tempLayanan.get(y).getName());
-                    Log.e("TEMP LAYANAN Harga", tempLayanan.get(y).getPrice());
-
-                }
-                AdapterSpinnerLayanan al = new AdapterSpinnerLayanan(Order.this, R.layout.row_spinnerlayanan, tempLayanan);
-
-                spLayanan.setAdapter(al);
-            }
-
-            @Override
-            public void onFailure(Call<List<LayananUtil>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "error get layanan -> "+t.getMessage().toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
-
-    private void getKlinikRetro(){
-
-        Call<List<KlinikUtil>> klinik = mApiInterface.getKlinik(token);
-        klinik.enqueue(new Callback<List<KlinikUtil>>() {
-            @Override
-            public void onResponse(Call<List<KlinikUtil>> call, retrofit2.Response<List<KlinikUtil>> response) {
-
-                List<KlinikUtil> tempKlinik = response.body();
-
-
-//                try {
-//                    JSONObject json_obj = new JSONObject(response.toString());
-//                    Log.e("JSON RESPONSE",""+json_obj);
-//                    JSONArray jsonResponse  = json_obj.
-//                    JSONArray jsonResponse = new JSONArray(response);
-//
-//                    for (int i=0; i<jsonResponse.length(); i++){
-//                        JSONObject koordinat = jsonResponse.getJSONObject(i);
-//                        KlinikUtil data = new KlinikUtil();
-//                        data.setId(koordinat.getString("id"));
-//                        data.setNama(koordinat.getString("nameOfClinic"));
-//                        data.setKode(koordinat.getString("codeOfClinic"));
-//                        data.setAlamat(koordinat.getString("address"));
-//                        data.setStatus(koordinat.getString("status"));
-//                        dataKlinik.add(data);
-//                    }
-//                } catch (JSONException e) {
-//                    Log.e("ERROR JSON", e.toString());
-//                    e.printStackTrace();
-//                }
-
-//                ArrayAdapter<KlinikUtil> adapterKlinik = new ArrayAdapter<KlinikUtil>(Order.this,
-//                        android.R.layout.simple_spinner_dropdown_item, tempKlinik);
-
-                AdapterKlinik aklinik = new AdapterKlinik(Order.this, R.layout.row_spinnerklinik, tempKlinik);
-                spLayanan.setAdapter(aklinik);
-            }
-
-            @Override
-            public void onFailure(Call<List<KlinikUtil>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "error get klinik => "+t.getMessage().toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
 
     private void postReq(){
         final String urlOrder = "http://167.205.7.227:9028/api/transaction" ;
@@ -469,56 +389,18 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
         return dateFormat.format(date);
     }
 
-    private void sendAndRequestResponse() {
-
-        Log.e("Token Request", token);
-
-        //RequestQueue initialized
-        mRequestQueue = Volley.newRequestQueue(this);
-
-        //String Request initialized
-        mStringRequest = new StringRequest(Request.Method.GET, urlLayanan, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                Toast.makeText(getApplicationContext(),"Response :" + response.toString(), Toast.LENGTH_LONG).show();//display the response on screen
-
-
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.i("Send Request","Error :" + error.toString());
-            }
-        })
-
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<String, String>();
-//                params.put("Content-Type", "application/json; charset=UTF-8");
-                headers.put("Authorization", token);
-                return headers;
-            }
-        };
-
-        mRequestQueue.add(mStringRequest);
-    }
 
     private void getKlinik() {
 
         Log.e("Klinik Request", token);
 
-        StringRequest request = new StringRequest(Request.Method.POST, urlKlinik, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET, urlKlinik, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (!response.equals(null)) {
-                    Log.e("Your Array Response", response);
+                    Log.e("Get Clinic", response);
                 } else {
-                    Log.e("Your Array Response", "Data Null");
+                    Log.e("Get Clinic", "Data Null");
                 }
             }
 
@@ -544,3 +426,5 @@ public class Order extends AppCompatActivity implements RecyclerAdapter.OnItemCl
         queue.add(request);
     }
 }
+
+

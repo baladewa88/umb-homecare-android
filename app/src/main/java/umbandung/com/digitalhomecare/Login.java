@@ -25,12 +25,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import umbandung.com.digitalhomecare.Model.Auth;
-import umbandung.com.digitalhomecare.Rest.ApiClient;
-import umbandung.com.digitalhomecare.Rest.ApiInterface;
-
 /**
  * Created by Arkhan on 7/23/2018.
  */
@@ -50,13 +44,13 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
     public static final int CONNECTION_TIMEOUT = 100000;
     public static final int READ_TIMEOUT = 150000;
 
-    ApiInterface mApiInterface;
 
     JSONObject json_obj, userData;
 
     //Hubungan sama volley
     private RequestQueue mRequestQueue;
     private StringRequest mStringRequest;
+    private String clinicID;
 
 
     @Override
@@ -65,9 +59,6 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
         setContentView(R.layout.login);
 
         mySharedPrefernce = new MySharedPrefernce();
-        String[] data = mySharedPrefernce.getValue(Login.this);
-
-        mApiInterface = ApiClient.getClient().create(ApiInterface.class);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
 //        roleParam = "userAdmin";
@@ -91,35 +82,16 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
 //                    btnLogin.setEnabled(true);
                 }else{
                     postReq();
-//                authLogin();
                 }
 
 
             }
         });
 
+
+
     }
 
-    private void authLogin(){
-        Call<Auth> loginUser = mApiInterface.getAuth(roleParam, email, password);
-        loginUser.enqueue(new Callback<Auth>() {
-            @Override
-            public void onResponse(Call<Auth> call, retrofit2.Response<Auth> response) {
-                if (response.isSuccessful()){
-                    Toast.makeText(getApplicationContext(), "LOGIN SUKSES", Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(getApplicationContext(), "LOGIN GAGAL", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Auth> call, Throwable t) {
-                Log.e("GAGAL LOGIN", t.getMessage());
-                Toast.makeText(getApplicationContext(), "LOGIN GAGAL "+t.getMessage(), Toast.LENGTH_LONG).show();
-
-            }
-        });
-    }
     private void postReq(){
         final String urlLogin = "http://167.205.7.227:9028/authenticate/"+roleParam ;
         //RequestQueue initialized
@@ -132,15 +104,48 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                     public void onResponse(String response) {
 
                         // response
-//                        Log.e("Response", response);
+                        Log.d("Response", response);
                         try {
                             json_obj = new JSONObject(response);
                             userData = new JSONObject(json_obj.getString("user"));
+                            clinicID = userData.getJSONObject("clinic").get("id").toString();
                             Log.e("TOKEN",json_obj.getString("token"));
                             Log.e("dateBirth",userData.getString("dateBirth"));
                             Log.e("nama",userData.getString("fullName"));
                             Log.e("roles atas",userData.getString("roles"));
                             Log.e("roles array",userData.getString("id"));
+
+
+
+                            if(userData.getString("roles").equals("[\"ROLE_PATIENT\"]")){
+                                Log.e("ROLES","PASIEN");
+                                Intent iPasien = new Intent(Login.this, DashboardMain.class);
+                                startActivity(iPasien);
+
+                            }else if(userData.getString("roles").equals("[\"ROLE_ADMIN\"]")){
+                                Log.e("ROLES","ADMIN");
+                                Intent iAdmin = new Intent(Login.this, DashboardUtama.class);
+                                startActivity(iAdmin);
+
+                            }else if(userData.getString("roles").equals("[\"ROLE_NURSE\"]")){
+                                Log.e("ROLES","NURSE");
+                                Intent iMedis = new Intent(Login.this, DashboardMedis.class);
+                                startActivity(iMedis);
+
+                            }else if(userData.getString("roles").equals("[\"ROLE_DOCTOR\"]")){
+                                Log.e("ROLES","DOCTOR");
+                                Intent iMedis = new Intent(Login.this, DashboardMedis.class);
+                                startActivity(iMedis);
+
+                            }else if(userData.getString("roles").equals("[\"ROLE_CLINIC\"]")){
+                                Log.d("CLINIC_ID", clinicID);
+                                mySharedPrefernce.store(Login.this, "CLINIC_ID", clinicID);
+                                Log.e("ROLES","CLINIC");
+                                Intent iKlinik = new Intent(Login.this, DashboardKlinik.class);
+                                startActivity(iKlinik);
+                            }else {
+                                Log.e("ROLES","NONE");
+                            }
 
                             mySharedPrefernce.save(Login.this,
                                     userData.getString("fullName"),
@@ -152,11 +157,6 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                                     userData.getString("dateBirth"),
                                     json_obj.getString("token"),
                                     userData.getString("id"));
-
-                            ifLogin(userData.getString("roles"));
-
-
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -175,6 +175,8 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
                     }
                 }
         ) {
+
+
             @Override
             protected Map<String, String> getParams()
             {
@@ -186,39 +188,6 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
             }
         };
         mRequestQueue.add(postRequest);
-    }
-
-    public void ifLogin(String param){
-
-        if(param.equals("[\"ROLE_PATIENT\"]")){
-            Log.e("ROLES","PASIEN");
-
-            Intent iPasien = new Intent(Login.this, DashboardMain.class);
-            startActivity(iPasien);
-
-        }else if(param.equals("[\"ROLE_ADMIN\"]")){
-            Log.e("ROLES","ADMIN");
-            Intent iAdmin = new Intent(Login.this, DashboardUtama.class);
-            startActivity(iAdmin);
-
-        }else if(param.equals("[\"ROLE_NURSE\"]")){
-            Log.e("ROLES","NURSE");
-            Intent iMedis = new Intent(Login.this, DashboardMedis.class);
-            startActivity(iMedis);
-
-        }else if(param.equals("[\"ROLE_DOCTOR\"]")){
-            Log.e("ROLES","DOCTOR");
-            Intent iMedis = new Intent(Login.this, DashboardMedis.class);
-            startActivity(iMedis);
-
-        }else if(param.equals("[\"ROLE_CLINIC\"]")){
-            Log.e("ROLES","CLINIC");
-            Intent iKlinik = new Intent(Login.this, DashboardKlinik.class);
-            startActivity(iKlinik);
-        }else {
-            Log.e("ROLES","NONE");
-        }
-
     }
 
     @Override
@@ -237,7 +206,7 @@ public class Login extends AppCompatActivity implements AdapterView.OnItemSelect
             roleParam = "userDoctor";
         }
 
-//        Toast.makeText(getApplicationContext(),"Changed Value to "+roleParam, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Changed Value to "+roleParam, Toast.LENGTH_LONG).show();
     }
 
     @Override

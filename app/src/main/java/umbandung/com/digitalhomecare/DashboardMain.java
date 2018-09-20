@@ -1,15 +1,12 @@
 package umbandung.com.digitalhomecare;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -18,7 +15,7 @@ import android.widget.Toast;
 
 public class DashboardMain extends AppCompatActivity {
 
-    MySharedPrefernce mSettings;
+    private MySharedPrefernce mSettings;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +26,6 @@ public class DashboardMain extends AppCompatActivity {
         for(int i=0; i<datas.length; i++){
             Log.e("DATAS "+i+" => ",datas[i]);
         }
-
-        TextView nama = (TextView)findViewById(R.id.welcome_nama);
-        nama.setText("Selamat datang, "+datas[0]);
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
 
@@ -53,13 +47,13 @@ public class DashboardMain extends AppCompatActivity {
                 }else if(position==2){ //Halaman Order
                     Intent iOrder = new Intent(DashboardMain.this, Order.class);
                     startActivity(iOrder);
-                }else if(position==3){ //Halaman Transaksi
-                    Intent iTransaksi = new Intent(DashboardMain.this, Transaksi.class);
+                }else if(position==3){ //Halaman OrderHistory
+                    Intent iTransaksi = new Intent(DashboardMain.this, OrderHistory.class);
                     startActivity(iTransaksi);
-                }else if(position==4){ //Halaman Transaksi
+                }else if(position==4){
                     mSettings.clearSharedPreference(DashboardMain.this);
-                    Intent iLogin = new Intent(DashboardMain.this, Login.class);
-                    startActivity(iLogin);
+                    Intent iTransaksi = new Intent(DashboardMain.this, Login.class);
+                    startActivity(iTransaksi);
                 }
             }
         });
@@ -76,7 +70,7 @@ public class DashboardMain extends AppCompatActivity {
 
     String[] gridViewString = {
 
-            "PROFIL", "ECG", "ORDER", "HISTORY", "LOG OUT"
+            "PROFIL", "ECG", "ORDER", "HISTORY", "LOGOUT"
     };
 
 }
