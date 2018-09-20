@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="umbandung.com.digitalhomecare.DetailTransaksi">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_no_order">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Order Number"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/nomor_order"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="UM-060918744"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_nama_pasien"
+            android:layout_below="@id/ly_no_order">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Nama Pasien"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/nama_pasien"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Sutadi Triputra"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_kode_pasien"
+            android:layout_below="@id/ly_nama_pasien">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Kode Pasien"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/kode_pasien"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="PS006"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_tanggal_order"
+            android:layout_below="@id/ly_kode_pasien">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Tanggal\nOrder"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tanggal_order"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="6 September 2018 19:8:31"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_alamat_visit"
+            android:layout_below="@id/ly_tanggal_order">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Alamat Visit"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/alamat_visit"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Jalan Kangkung 21 Bogor"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_nama_klinik"
+            android:layout_below="@id/ly_alamat_visit">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Klinik"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/nama_klinik"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Rumah Sakit Al Islam"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_status_transaksi"
+            android:layout_below="@id/ly_nama_klinik">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Status Transaksi"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/status_transaksi"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="On Validation"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ly_tanggal_treatment"
+            android:layout_below="@id/ly_status_transaksi">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Tgl\nTreatment"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tanggal_treatment"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="11 September 2018 19:37:42"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10sp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Assign"
+                android:id="@+id/btn_assign"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</LinearLayout>

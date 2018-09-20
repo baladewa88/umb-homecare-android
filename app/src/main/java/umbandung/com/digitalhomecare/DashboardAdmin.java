@@ -40,8 +40,8 @@ public class DashboardAdmin extends AppCompatActivity{
                 }else if(position==2){ //Halaman Order
                     Intent iOrder = new Intent(DashboardAdmin.this, Order.class);
                     startActivity(iOrder);
-                }else if(position==3){ //Halaman Transaksi
-                    Intent iTransaksi = new Intent(DashboardAdmin.this, Transaksi.class);
+                }else if(position==3){ //Halaman OrderHistory
+                    Intent iTransaksi = new Intent(DashboardAdmin.this, OrderHistory.class);
                     startActivity(iTransaksi);
                 }
             }
@@ -53,13 +53,12 @@ public class DashboardAdmin extends AppCompatActivity{
             R.mipmap.homecare_profil,
             R.mipmap.homecare_ecg,
             R.mipmap.homecare_order,
-            R.mipmap.homecare_transaksi,
-            R.mipmap.logout
+            R.mipmap.homecare_transaksi
     };
 
     String[] gridViewString = {
 
-            "PROFIL", "ECG", "ORDER", "HISTORY", "LOG OUT"
+            "PROFIL", "ECG", "ORDER", "HISTORY"
     };
 
 }
